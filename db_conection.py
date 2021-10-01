@@ -7,11 +7,8 @@ client = MongoClient(MONGO_URI)
 
 db = client['hackaton']
 collection = db['platforms']
-collectionPre = db['preScraping']
 
 def insert(data, collection=collection):
-    if collection == 'preScraping':
-        collection = collectionPre
     query = collection.insert_one(data)
     if query:
         print(f'Inserte one ok')
@@ -21,13 +18,10 @@ def insert(data, collection=collection):
         return False
 
 def insertMany(data, collection=collection ):
-    if collection == 'preScraping':
-        collection = collectionPre
     query =  collection.insert_many(data)
     if query:
         print(f'Inserte many ok')
         return True
-
     else:
         print(f'Isenrt many error')
         return None

@@ -20,9 +20,8 @@ class AppleTV():
         self.insert_many_to_db = db_conection.insertMany
         self.insert_one_to_db = db_conection.insert
         self.scraped = []
-        self.prescraping_payloads = []
+        #self.prescraping_payloads = []
         
-        self.scraping()
 
     def scraping(self):    
         payloads = list()
@@ -35,7 +34,7 @@ class AppleTV():
             _id = item['id']
             # print(_id)
             id_list.append(_id)
-        
+
         apple_url= "https://tv.apple.com/"
         more_ids= self.applebs4(apple_url)
 
@@ -44,9 +43,9 @@ class AppleTV():
         
         id_list=list(set(id_list))
         
-        
-        for content in id_list:
+        #self.get_top_10_contents(id_list)
 
+        for content in id_list:
             url = 'https://tv.apple.com/api/uts/v2/view/show/{}?utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'.format(content)
             print('CONTENT URL ',url)
             response = self.getUrl(url=url)
@@ -60,8 +59,8 @@ class AppleTV():
             content_soup = BeautifulSoup(content_deeplink_data, 'lxml')
             
             ### PRESCRAPING ###
-            prescraping_payload = self.get_prescraping_payload(data, content_deeplink_data)
-            self.prescraping_payloads.append(prescraping_payload)
+            #prescraping_payload = self.get_prescraping_payload(data, content_deeplink_data)
+            #self.prescraping_payloads.append(prescraping_payload)
             ### PRESCRAPING ###
             
             print(data['data']['content']['type'])
@@ -155,16 +154,12 @@ class AppleTV():
             else:
                 self.scraped.append(data['data']['content']['id'])
                 payloads.append(payload)
-            ### ### ### ### ### ### ### ### ### ### ### 
 
             if len(payloads) > 99:
                 self.insert_many_to_db(payloads)
                 payloads.clear()
         if payloads:
             self.insert_many_to_db(payloads)
-        if self.prescraping_payloads:
-            self.insert_many_to_db(self.prescraping_payloads, collection="preScraping")
-        
         self.currentSession.close()
         print('Finished')
         #Upload(self._platform_code, self._created_at, testing=testing)
@@ -269,7 +264,7 @@ class AppleTV():
     def get_prescraping_payload(self, data, content_deeplink_data):
         
         payload = {
-            'PlatformCode': self._platform_code,
+            'PlatformCode': self.platformCode,
             'Id': data['data']['content']['id'],
             'Title': data['data']['content']['title'],
             'CreatedAt': self._created_at,
@@ -305,3 +300,19 @@ class AppleTV():
                      'Name': person_name})
         
         return cast or None, directors or None, crew or None
+
+    def get_top_10_contents(self,list_ids):
+        for content in list_ids:
+            url = 'https://tv.apple.com/api/uts/v2/view/show/{}?utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'.format(content)
+            response = self.getUrl(url=url)
+            try:
+                data = response.json()
+                content_id = data['data']['channels'][0]['appAdamIds'][0]
+                title_slug = data['data']['content']['title']
+            except: continue
+            category = data['data']['content']['type']
+            country_code = 'ar'
+            api_2 = 'https://itunes.apple.com/{}/{}/{}/id{}?isWebExpV2=true&dataOnly=true'.format(country_code,category,title_slug,content_id)
+            response_2 = self.getUrl(url=api_2)
+            data_2 = response_2.json()
+            print(str(data_2))
