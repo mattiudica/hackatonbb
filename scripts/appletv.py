@@ -1,8 +1,307 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 path = os.path.abspath('.')
 sys.path.insert(1, path)
 import db_conection
-data = [{"name":"samu", "age":15},{"name":"facu", "age":12},{"name":"juli", "age":20}]
+import time
+import requests
+import json
+from datetime import datetime
+from bs4 import BeautifulSoup
 
-db_conection.insertMany(data)
+
+class AppleTV():
+    def __init__(self):
+        self._created_at  = time.strftime("%Y-%m-%d")
+        self.headers  = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0'}
+        self.currentSession = requests.session()
+        self.platformCode = 'all.appletv'
+        self.insert_many_to_db = db_conection.insertMany
+        self.insert_one_to_db = db_conection.insert
+        self.scraped = []
+        self.prescraping_payloads = []
+        
+        self.scraping()
+
+    def scraping(self):    
+        payloads = list()
+        start_url = 'https://tv.apple.com/api/uts/v2/browse/webLanding?l=en&utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'
+        response = self.getUrl(url=start_url)
+        data = response.json()
+        
+        id_list = []
+        for item in data['data']['items']:
+            _id = item['id']
+            # print(_id)
+            id_list.append(_id)
+        
+        apple_url= "https://tv.apple.com/"
+        more_ids= self.applebs4(apple_url)
+
+        for id in more_ids:
+            id_list.append(id)
+        
+        id_list=list(set(id_list))
+        
+        
+        for content in id_list:
+
+            url = 'https://tv.apple.com/api/uts/v2/view/show/{}?utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'.format(content)
+            print('CONTENT URL ',url)
+            response = self.getUrl(url=url)
+            try:
+                data = response.json()
+            except:
+                continue
+            
+            content_deeplink = data['data']['content']['url']
+            content_deeplink_data = self.currentSession.get(content_deeplink).text
+            content_soup = BeautifulSoup(content_deeplink_data, 'lxml')
+            
+            ### PRESCRAPING ###
+            prescraping_payload = self.get_prescraping_payload(data, content_deeplink_data)
+            self.prescraping_payloads.append(prescraping_payload)
+            ### PRESCRAPING ###
+            
+            print(data['data']['content']['type'])
+            if data['data']['content']['type'] == 'Movie':
+                _type = 'movie'
+            elif data['data']['content']['type'] == 'Show':
+                _type = 'serie'
+
+            if data['data']['content'].get('genres'):
+                genres = []
+                for g in data['data']['content']['genres']:
+                    genres.append(g['name'])
+            else:
+                genres = None
+            
+            roles_data = content_soup.find_all("div", {"class": "profile-lockup__details"})
+            cast, directors, crew = self.get_roles(roles_data)
+            
+            imageL = []
+            images =  data['data']['content']['images']['coverArt']['url'] if data['data']['content']['images'].get('coverArt') else None
+            width  =  data['data']['content']['images']['coverArt']['width'] if data['data']['content']['images'].get('coverArt') else None
+            height =  data['data']['content']['images']['coverArt']['height'] if data['data']['content']['images'].get('coverArt') else None
+            if images != None and width != None and height != None:
+                images = images.split('{')
+                images = images[0]
+                images = images + str(width) + 'x' + str(height) + 'tc.jpg'
+                imageL.append(images)
+            
+            try:             
+                _timestamp = data['data']['content']['releaseDate']
+                _timestamp = str(_timestamp)
+                _timestamp = _timestamp[:-3]
+                _timestamp = int(_timestamp)
+                date_ = datetime.date.fromtimestamp(_timestamp)
+                year = datetime.date.fromtimestamp(_timestamp)
+                year = str(year)
+                year = year.split('-')
+                year = int(year[0])
+                if year < 1870 or year > datetime.now().year:
+                    year = None
+            except:
+                year = None
+            
+            if not year:
+                year = self.get_year_from_soup(content_soup)
+
+            is_original= self.is_original(data['data']['content'])
+            rating = self.get_rating(data['data']['content'])
+            duration = self.get_duration(data['data']['content'])
+
+            try:
+                synopsis= data['data']['content']['description']
+            except:
+                synopsis= None
+
+            payload = {
+                'PlatformCode'  : self.platformCode,
+                'Id'            :  data['data']['content']['id'],
+                'Type'          : _type,
+                'Title'         :  data['data']['content']['title'],
+                'CleanTitle'    : data['data']['content']['title'],
+                'OriginalTitle' : None,      
+                'Year'          : year,
+                'Duration'      : duration,
+                'Deeplinks'     : {
+                                    'Web':  content_deeplink,
+                                    'Android': None,
+                                    'iOS': None
+                },
+                'Synopsis'      : synopsis,
+                'Rating'        : rating,
+                'Provider'      : None,
+                'Genres'        : genres,
+                'Cast'          : cast,
+                'Crew'          : crew,
+                'Directors'     : directors,
+                'Country'       : None,
+                'Availability'  : None,
+                'Download'      : None,
+                'IsOriginal'    : is_original,
+                'IsAdult'       : None,
+                "IsBranded"     : None,
+                'Image'         : imageL,
+                'Packages'      : [{'Type': 'subscription-vod'}],
+                'Timestamp'     : datetime.now().isoformat(),
+                'CreatedAt'     : self._created_at
+            }
+
+            if data['data']['content']['id'] in self.scraped:
+                continue
+            else:
+                self.scraped.append(data['data']['content']['id'])
+                payloads.append(payload)
+            ### ### ### ### ### ### ### ### ### ### ### 
+
+            if len(payloads) > 99:
+                self.insert_many_to_db(payloads)
+                payloads.clear()
+        if payloads:
+            self.insert_many_to_db(payloads)
+        if self.prescraping_payloads:
+            self.insert_many_to_db(self.prescraping_payloads, collection="preScraping")
+        
+        self.currentSession.close()
+        print('Finished')
+        #Upload(self._platform_code, self._created_at, testing=testing)
+        
+    def getUrl(self, url):
+        requestsTimeout = 5
+        while True:
+            try:
+                response = self.currentSession.get(url, timeout=requestsTimeout)
+                return response
+            except requests.exceptions.ConnectionError:
+                print("Connection Error, Retrying")
+                time.sleep(requestsTimeout)
+                requestsTimeout = requestsTimeout + 5
+                if requestsTimeout == 45:
+                    print('Timeout has reached 45 seconds.')
+                    break
+                continue
+            except requests.exceptions.RequestException:
+                print('Waiting...')
+                time.sleep(requestsTimeout)
+                requestsTimeout = requestsTimeout + 5
+                if requestsTimeout == 45:
+                    print('Timeout has reached 45 seconds.')
+                    break
+                continue
+            break
+    
+    def is_original(self, data):
+        return data['isAppleOriginal']
+   
+    def get_rating(self, data):
+        return data['rating']['displayName'] if data.get('rating') else None
+
+    def get_duration(self, data):
+        if data.get('duration'):
+            return data['duration'] // 60
+        else:
+            return None
+
+    def applebs4(self, apple_url):
+        response= self.getUrl(url=apple_url)
+        data= BeautifulSoup(response.text, "html.parser")
+        ids=[]
+        list_of_li = data.find_all("li",{"class":"shelf-grid__list-item"})
+        # print(list_of_li)
+        for li in list_of_li:
+            div= li.find('div',{'class': 'canvas-lockup'})
+            if not div:
+                continue
+            if not div.get('data-metrics-click'):
+                continue
+            data= div.get('data-metrics-click')
+            data= json.loads(data) 
+            id= data['targetId']
+            # print(id)
+            ids.append(id)
+        for li in list_of_li:
+            div= li.find('a',{'class': 'notes-lockup'})
+            if not div:
+                continue
+            if not div.get('data-metrics-click'):
+                continue
+            data= div.get('data-metrics-click')
+            data= json.loads(data) 
+            id= data['targetId']
+            print(id)
+            ids.append(id)
+
+        return ids
+
+    def get_year_from_soup(self, soup):
+        """Este método se utiliza en el caso de que no se pudiera
+        obtener el año de estreno de un contenido por API, se hace
+        una consulta directa por html en base a la url de dicho contenido.
+        
+        - Return: int correspondiente al año | None si no se puede obtener
+        """
+        print('INTENTANDO OBTENER AÑO POR SOUP...')
+        data_container = soup.find('div', {'class':'product-header__content__details__metadata--info'})
+        if data_container:
+            year = None
+            for data in data_container.findAll('span'):
+                try:
+                    possible_year = int(data.text)
+                    if possible_year in range(1870, datetime.now().year+1):
+                        year = possible_year
+                except:
+                    continue
+            return year
+        else:
+            return None
+
+    def clean_cast(self, cast_list):
+        """Limpia los nombres de los actores en caso de ser necesario
+        """
+        cast = []
+        for actor in cast_list:
+            cast.append(actor.replace('\xa0', ' '))
+        return cast if cast else None
+    
+    def get_prescraping_payload(self, data, content_deeplink_data):
+        
+        payload = {
+            'PlatformCode': self._platform_code,
+            'Id': data['data']['content']['id'],
+            'Title': data['data']['content']['title'],
+            'CreatedAt': self._created_at,
+            'Timestamp': datetime.now().isoformat(),
+            'JSON': str(data),
+            'HTML': content_deeplink_data
+        }
+        
+        return payload
+    
+    def get_roles(self, roles_data):
+        
+        cast = []
+        directors = []
+        crew = []
+        
+        for person_data in roles_data:
+            person_name_data = person_data.contents[1].text
+            person_name = person_name_data.replace('\n','').strip().replace('\xa0', ' ')
+            
+            role_data = person_data.parent
+            person_role = json.loads(role_data['data-metrics-click'])['contentType']
+            
+            if person_role == 'Actor':
+                cast.append(person_name)
+                
+            elif person_role == 'Director':
+                directors.append(person_name)
+            
+            else:
+                crew.append(
+                    {'Role': person_role,
+                     'Name': person_name})
+        
+        return cast or None, directors or None, crew or None
