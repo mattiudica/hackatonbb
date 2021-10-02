@@ -11,15 +11,17 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import re
-import pprint
+from common import config
 
 
 class AppleTV():
-    def __init__(self):
+    def __init__(self, ott_site_uid, ott_site_country, operation='testing'):
+        
+        self._config                = config()['ott_sites'][ott_site_uid]
+        self._platform_code         = self._config['countries'][ott_site_country]
         self._created_at  = time.strftime("%Y-%m-%d")
         self.headers  = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0'}
         self.currentSession = requests.session()
-        self.platformCode = 'all.appletv'
         self.insert_many_to_db = db_conection.insertMany
         self.insert_one_to_db = db_conection.insert
         self.scraped = []
@@ -28,7 +30,8 @@ class AppleTV():
         self.top_ten_movies = []
         self.top_ten_shows = []
         self.browser = webdriver.Firefox()
-        
+        if operation=='testing':
+            self.scraping()
 
     def scraping(self):
         self.get_trendings()    
@@ -119,7 +122,7 @@ class AppleTV():
                 synopsis= None
 
             payload = {
-                'PlatformCode'  : self.platformCode,
+                'PlatformCode'  : self._platform_code,
                 'Id'            :  data['data']['content']['id'],
                 'Type'          : _type,
                 'Title'         :  data['data']['content']['title'],
@@ -274,19 +277,6 @@ class AppleTV():
             cast.append(actor.replace('\xa0', ' '))
         return cast if cast else None
     
-    def get_prescraping_payload(self, data, content_deeplink_data):
-        
-        payload = {
-            'PlatformCode': self.platformCode,
-            'Id': data['data']['content']['id'],
-            'Title': data['data']['content']['title'],
-            'CreatedAt': self._created_at,
-            'Timestamp': datetime.now().isoformat(),
-            'JSON': str(data),
-            'HTML': content_deeplink_data
-        }
-        
-        return payload
     
     def get_roles(self, roles_data):
         

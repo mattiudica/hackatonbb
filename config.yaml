@@ -707,6 +707,9 @@ tp_sites:
     - CanalOff
     - Globosat
 ott_sites:
+  AppleTV:
+    countries:
+      ALL: 'all.appletv'
   AmazonPrimeVideo:
     ###############################################
     # Configuración de PlatformCodes disponibles. #
@@ -1337,3 +1340,5 @@ ott_sites:
       a_see_more: '//a[contains(@class,"see-more")]' # Aplico Regex
       div_all_categories: '//div[contains(@class,"u-collection tst-collection")]' # Aplico Regex
       a_categories: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[{last_categorie}]/div/div[2]/div/div/ul/li/div/a'
+
+    
