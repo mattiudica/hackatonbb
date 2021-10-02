@@ -63,4 +63,4 @@ requests-html==0.10.0
 # pyotp
 # playwright
 # undetected-chromedriver
-# pycountry
+pycountry

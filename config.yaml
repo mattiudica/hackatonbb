@@ -1086,6 +1086,22 @@ ott_sites:
         account: account_JO
         cookie: true
         region: "na"
+  HBO:
+    countries:
+      US: 'us.hbomax'
+      AR: 'ar.hbomax'
+      PY: 'py.hbomax'
+      PE: 'pe.hbomax'
+      BR: 'br.hbomax'
+      EC: 'ec.hbomax'
+      MX: 'mx.hbomax'
+      CL: 'cl.hbomax'
+      UY: 'uy.hbomax'
+      PA: 'pa.hbomax'
+      CR: 'cr.hbomax'
+      CO: 'co.hbomax'
+      VE: 've.hbomax'
+      GT: 'gt.hbomax'
 
     ########################
     # Cuentas disponibles. #
