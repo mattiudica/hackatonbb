@@ -1,59 +1,35 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 path = os.path.abspath('.')
 sys.path.insert(1, path)
 import db_conection
-
-
 import time
-# -*- coding: utf-8 -*-
 import time
 import requests
-import hashlib
-import json
 import re
-import unicodedata
-import threading
-import platform
 import pyautogui
-from pyvirtualdisplay                               import Display
-from difflib                                        import SequenceMatcher
 from bs4                                            import BeautifulSoup
 from common                                         import config
 from datetime                                       import datetime
 from handle.mongo                                   import mongo
 from handle.replace                                 import _replace
-from handle.datamanager                             import Datamanager
 from handle.datamanager                             import RequestsUtils
 from selenium                                       import webdriver
-from selenium.webdriver.common.action_chains        import ActionChains
-from selenium.webdriver.firefox.options             import Options
-
-
-
-
 class Login():
     
     def __init__(self, ott_site_uid, ott_site_country, type):
         
         self._config                    = config()['ott_sites'][ott_site_uid]
         self._country                   = ott_site_country
-        # self._start_url                 = self._config['start_url']
         self._platform_code             = self._config['countries'][ott_site_country]
-        # if self._country != 'JP':
-        #     self.class_id               = self._config['class_id'][ott_site_country]
-        #     self.locale                 = self._config['locale'][ott_site_country]
-        #     self.market_code            = self._config['market_code'][ott_site_country]
         self._created_at                = time.strftime('%Y-%m-%d')
         self.mongo                      = mongo()
-        # self.currency                   = config()['currency'][ott_site_country]
-        self.titanTopOverall = config()['mongo']['collections']['scraping']
-        self.titanTopMovies = config()['mongo']['collections']['scraping']
-        self.titanTopSeries = config()['mongo']['collections']['scraping']
+        self.titanTopOverall = config()['mongo']['collections']['topOverall']
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
         self.headers  = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         self.currentSession = self.sesion = requests.session()
-        self.skippedEpis = 0
-        self.skippedTitles = 0
         self.req_utils = RequestsUtils()
         self.browser = webdriver.Firefox() 
         self.payloads = []
@@ -126,16 +102,8 @@ class Login():
             if self.movies == True:
                 self.mongo.insertMany(self.titanTopMovies, payloads) 
             if self.series == True:
-                self.mongo.insertMany(self.titanTopSeries, payloads) 
-
-                        
+                self.mongo.insertMany(self.titanTopSeries, payloads)                    
             
-
-
-                
-            
-
-        
     def get_payloads(self, deeplink, id_, titulo, top_position):
         self.browser.get(deeplink)
         soup = BeautifulSoup(self.browser.page_source, 'lxml')

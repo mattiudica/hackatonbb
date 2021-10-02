@@ -8,9 +8,10 @@ path = os.path.abspath('.')
 sys.path.insert(1, path)
 import db_conection
 import requests
+from common import config
 
 class DisneyPlus():
-    def __init__(self):
+    def __init__(self,ott_site_uid):
         self.insert_many_to_db    = db_conection.insertMany
         self.insert_one_to_db     = db_conection.insert
         self._created_at          = time.strftime("%Y-%m-%d")
@@ -20,6 +21,10 @@ class DisneyPlus():
         self.password             = 'KLM2012a'
         self.main_url             = 'https://www.disneyplus.com'
         self.payloads             = []
+        self._config            = config()['ott_sites'][ott_site_uid]
+        self.mongo = mongo()   
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
 
     def scrap(self):
 
