@@ -1,0 +1,1339 @@
+mysql:
+  local:
+    host: localhost
+    user: root
+    pass: KLM2012a
+    database: mpc_real_time
+  mpc:
+    host: external-db.s133624.gridserver.com
+    user: db133624_titan
+    password: 9Cbf{9t[Ub
+    database: db133624_multiscreens
+    queries:
+      survey: SELECT MAX(S.id) AS surve_id FROM survey S WHERE S.periodicity = "quarterly" AND S.published = 1
+      platforms: SELECT * FROM survey_platform SP WHERE SP.survey_id = %s AND SP.published = 1 AND SP.code <> 'netflix-panregional' AND SP.code <> 'claro-video-panregional'
+      excahnge: SELECT ct.code_alpha2, ex.exchange_rate, cr.code FROM survey_exchange_rate ex INNER JOIN country ct ON ex.country_id = ct.id INNER JOIN currency cr ON ex.currency_id = cr.id WHERE ex.survey_id = %s
+      mpc_presence: SELECT C.code, C.package, C.title_alternative, C.title, CASE WHEN C.content_type_id = 1 THEN 'movie' WHEN C.content_type_id = 2 THEN 'serie' END AS content_type, C.launch_year, CC.id, CC.imdb_id, CASE WHEN CC.content_genre_id = 2 THEN 1 ELSE 0 END AS is_adult, P.website, C.available_seasons FROM survey_platform_content C INNER JOIN content CC ON C.content_id = CC.id INNER JOIN survey_platform P ON C.code = P.code AND C.survey_id = P.survey_id WHERE C.survey_id = %s AND C.STATUS <> 'inactive'
+proxy:
+  start_url: 'https://proxy.dlv.app/api/auth/login'
+  proxy_url: 'https://proxy.dlv.app/api/proxies'
+  username: titan
+  password: titan_secret_8426
+  proxyRedirect: 'https://click.dlv.app/api/redirect/{id}'
+oxylabs:
+  countries:
+    AD:
+      host: ad-pr.oxylabs.io
+      port: '10000'
+    AE:
+      host: ae-pr.oxylabs.io
+      port: '40000'
+    AF:
+      host: af-pr.oxylabs.io
+      port: '28000'
+    AL:
+      host: al-pr.oxylabs.io
+      port: '49000'
+    AM:
+      host: am-pr.oxylabs.io
+      port: '31000'
+    AO:
+      host: ao-pr.oxylabs.io
+      port: '40000'
+    AR:
+      host: ar-pr.oxylabs.io
+      port: '30000'
+    AT:
+      host: at-pr.oxylabs.io
+      port: '11000'
+    AU:
+      host: au-pr.oxylabs.io
+      port: '40000'
+    AW:
+      host: aw-pr.oxylabs.io
+      port: '10000'
+    AZ:
+      host: az-pr.oxylabs.io
+      port: '20000'
+    BA:
+      host: ba-pr.oxylabs.io
+      port: '13000'
+    BD:
+      host: bd-pr.oxylabs.io
+      port: '30000'
+    BE:
+      host: be-pr.oxylabs.io
+      port: '30000'
+    BG:
+      host: bg-pr.oxylabs.io
+      port: '14000'
+    BH:
+      host: bh-pr.oxylabs.io
+      port: '29000'
+    BJ:
+      host: bj-pr.oxylabs.io
+      port: '44000'
+    BO:
+      host: bo-pr.oxylabs.io
+      port: '16000'
+    BR:
+      host: br-pr.oxylabs.io
+      port: '20000'
+    BS:
+      host: bs-pr.oxylabs.io
+      port: '41000'
+    BT:
+      host: bt-pr.oxylabs.io
+      port: '32000'
+    BY:
+      host: by-pr.oxylabs.io
+      port: '15000'
+    BZ:
+      host: bz-pr.oxylabs.io
+      port: '42000'
+    CA:
+      host: ca-pr.oxylabs.io
+      port: '30000'
+    CF:
+      host: cf-pr.oxylabs.io
+      port: '42000'
+    CH:
+      host: ch-pr.oxylabs.io
+      port: '39000'
+    CI:
+      host: ci-pr.oxylabs.io
+      port: '49000'
+    CL:
+      host: cl-pr.oxylabs.io
+      port: '40000'
+    CM:
+      host: cm-pr.oxylabs.io
+      port: '41000'
+    CN:
+      host: cn-pr.oxylabs.io
+      port: '30000'
+    CO:
+      host: co-pr.oxylabs.io
+      port: '30000'
+    CR:
+      host: cr-pr.oxylabs.io
+      port: '44000'
+    CU:
+      host: cu-pr.oxylabs.io
+      port: '45000'
+    CY:
+      host: cy-pr.oxylabs.io
+      port: '35000'
+    CZ:
+      host: cz-pr.oxylabs.io
+      port: '18000'
+    DE:
+      host: de-pr.oxylabs.io
+      port: '30000'
+    DJ:
+      host: dj-pr.oxylabs.io
+      port: '46000'
+    DK:
+      host: dk-pr.oxylabs.io
+      port: '19000'
+    DM:
+      host: dm-pr.oxylabs.io
+      port: '46000'
+    EC:
+      host: ec-pr.oxylabs.io
+      port: '20000'
+    EE:
+      host: ee-pr.oxylabs.io
+      port: '20000'
+    EG:
+      host: eg-pr.oxylabs.io
+      port: '10000'
+    ES:
+      host: es-pr.oxylabs.io
+      port: '10000'
+    ET:
+      host: et-pr.oxylabs.io
+      port: '45000'
+    FI:
+      host: fi-pr.oxylabs.io
+      port: '21000'
+    FJ:
+      host: fj-pr.oxylabs.io
+      port: '14000'
+    FR:
+      host: fr-pr.oxylabs.io
+      port: '40000'
+    GB:
+      host: gb-pr.oxylabs.io
+      port: '20000'
+    GE:
+      host: ge-pr.oxylabs.io
+      port: '36000'
+    GH:
+      host: gh-pr.oxylabs.io
+      port: '48000'
+    GM:
+      host: gm-pr.oxylabs.io
+      port: '47000'
+    GR:
+      host: gr-pr.oxylabs.io
+      port: '40000'
+    HK:
+      host: hk-pr.oxylabs.io
+      port: '40000'
+    HN:
+      host: hn-pr.oxylabs.io
+      port: '48000'
+    HR:
+      host: hr-pr.oxylabs.io
+      port: '16000'
+    HT:
+      host: ht-pr.oxylabs.io
+      port: '47000'
+    HU:
+      host: hu-pr.oxylabs.io
+      port: '23000'
+    ID:
+      host: id-pr.oxylabs.io
+      port: '10000'
+    IE:
+      host: ie-pr.oxylabs.io
+      port: '25000'
+    IL:
+      host: il-pr.oxylabs.io
+      port: '20000'
+    IN:
+      host: in-pr.oxylabs.io
+      port: '20000'
+    IQ:
+      host: iq-pr.oxylabs.io
+      port: '37000'
+    IR:
+      host: ir-pr.oxylabs.io
+      port: '40000'
+    IS:
+      host: is-pr.oxylabs.io
+      port: '24000'
+    IT:
+      host: it-pr.oxylabs.io
+      port: '20000'
+    JM:
+      host: jm-pr.oxylabs.io
+      port: '49000'
+    JO:
+      host: jo-pr.oxylabs.io
+      port: '38000'
+    JP:
+      host: jp-pr.oxylabs.io
+      port: '40000'
+    KE:
+      host: ke-pr.oxylabs.io
+      port: '10000'
+    KH:
+      host: kh-pr.oxylabs.io
+      port: '34000'
+    KR:
+      host: kr-pr.oxylabs.io
+      port: '30000'
+    KZ:
+      host: kz-pr.oxylabs.io
+      port: '30000'
+    LB:
+      host: lb-pr.oxylabs.io
+      port: '39000'
+    LI:
+      host: li-pr.oxylabs.io
+      port: '27000'
+    LR:
+      host: lr-pr.oxylabs.io
+      port: '11000'
+    LT:
+      host: lt-pr.oxylabs.io
+      port: '28000'
+    LU:
+      host: lu-pr.oxylabs.io
+      port: '29000'
+    LV:
+      host: lv-pr.oxylabs.io
+      port: '26000'
+    MA:
+      host: ma-pr.oxylabs.io
+      port: '16000'
+    MC:
+      host: mc-pr.oxylabs.io
+      port: '31000'
+    MD:
+      host: md-pr.oxylabs.io
+      port: '32000'
+    ME:
+      host: me-pr.oxylabs.io
+      port: '33000'
+    MG:
+      host: mg-pr.oxylabs.io
+      port: '12000'
+    MK:
+      host: mk-pr.oxylabs.io
+      port: '40000'
+    ML:
+      host: ml-pr.oxylabs.io
+      port: '13000'
+    MM:
+      host: mm-pr.oxylabs.io
+      port: '33000'
+    MN:
+      host: mn-pr.oxylabs.io
+      port: '41000'
+    MR:
+      host: mr-pr.oxylabs.io
+      port: '14000'
+    MT:
+      host: mt-pr.oxylabs.io
+      port: '30000'
+    MU:
+      host: mu-pr.oxylabs.io
+      port: '15000'
+    MV:
+      host: mv-pr.oxylabs.io
+      port: '40000'
+    MX:
+      host: mx-pr.oxylabs.io
+      port: '10000'
+    MY:
+      host: my-pr.oxylabs.io
+      port: '10000'
+    MZ:
+      host: mz-pr.oxylabs.io
+      port: '17000'
+    NG:
+      host: ng-pr.oxylabs.io
+      port: '18000'
+    NL:
+      host: nl-pr.oxylabs.io
+      port: '20000'
+    'NO':
+      host: no-pr.oxylabs.io
+      port: '34000'
+    NZ:
+      host: nz-pr.oxylabs.io
+      port: '15000'
+    OM:
+      host: om-pr.oxylabs.io
+      port: '42000'
+    PA:
+      host: pa-pr.oxylabs.io
+      port: '11000'
+    PE:
+      host: pe-pr.oxylabs.io
+      port: '10000'
+    PH:
+      host: ph-pr.oxylabs.io
+      port: '10000'
+    PK:
+      host: pk-pr.oxylabs.io
+      port: '30000'
+    PL:
+      host: pl-pr.oxylabs.io
+      port: '20000'
+    PR:
+      host: pr-pr.oxylabs.io
+      port: '12000'
+    PT:
+      host: pt-pr.oxylabs.io
+      port: '10000'
+    PY:
+      host: py-pr.oxylabs.io
+      port: '17000'
+    QA:
+      host: qa-pr.oxylabs.io
+      port: '43000'
+    RO:
+      host: ro-pr.oxylabs.io
+      port: '35000'
+    RS:
+      host: rs-pr.oxylabs.io
+      port: '36000'
+    RU:
+      host: ru-pr.oxylabs.io
+      port: '40000'
+    SA:
+      host: sa-pr.oxylabs.io
+      port: '44000'
+    SC:
+      host: sc-pr.oxylabs.io
+      port: '20000'
+    SD:
+      host: sd-pr.oxylabs.io
+      port: '23000'
+    SE:
+      host: se-pr.oxylabs.io
+      port: '30000'
+    SG:
+      host: sg-pr.oxylabs.io
+      port: '20000'
+    SI:
+      host: si-pr.oxylabs.io
+      port: '38000'
+    SK:
+      host: sk-pr.oxylabs.io
+      port: '37000'
+    SN:
+      host: sn-pr.oxylabs.io
+      port: '19000'
+    SS:
+      host: ss-pr.oxylabs.io
+      port: '22000'
+    TD:
+      host: td-pr.oxylabs.io
+      port: '43000'
+    TG:
+      host: tg-pr.oxylabs.io
+      port: '24000'
+    TH:
+      host: th-pr.oxylabs.io
+      port: '20000'
+    TM:
+      host: tm-pr.oxylabs.io
+      port: '46000'
+    TN:
+      host: tn-pr.oxylabs.io
+      port: '25000'
+    TR:
+      host: tr-pr.oxylabs.io
+      port: '30000'
+    TT:
+      host: tt-pr.oxylabs.io
+      port: '13000'
+    TW:
+      host: tw-pr.oxylabs.io
+      port: '10000'
+    UA:
+      host: ua-pr.oxylabs.io
+      port: '10000'
+    UG:
+      host: ug-pr.oxylabs.io
+      port: '26000'
+    US:
+      host: us-pr.oxylabs.io
+      port: '10000'
+    UY:
+      host: uy-pr.oxylabs.io
+      port: '18000'
+    UZ:
+      host: uz-pr.oxylabs.io
+      port: '47000'
+    VE:
+      host: ve-pr.oxylabs.io
+      port: '19000'
+    VG:
+      host: vg-pr.oxylabs.io
+      port: '43000'
+    VN:
+      host: vn-pr.oxylabs.io
+      port: '45000'
+    YE:
+      host: ye-pr.oxylabs.io
+      port: '48000'
+    ZA:
+      host: za-pr.oxylabs.io
+      port: '40000'
+    ZM:
+      host: zm-pr.oxylabs.io
+      port: '27000'
+    ZW:
+      host: zw-pr.oxylabs.io
+      port: '21000'
+  auth:
+    username: customer-bbscraping
+    password: C4RL0S
+mongo:
+  host: 'mongodb://localhost:27017/'
+  collections:
+    guia: titanGuia
+    prescraping: titanPreScraping
+    scraping: titanScraping
+    gatotv: titanScrapingGatoTV
+    episode: titanScrapingEpisodes
+    bash: titanScrapingBash
+    produc: titanProductions
+    program: titanProductionProgram
+    crew: titanProductionCrew
+    cast: titanProductionCast
+    productor: titanProductionProducer
+    productoras: titanProductionProducers
+    distributors: titanProductionDistributors
+    piracy: titanPiracyScraping
+    guiaChannel: titanChannels
+    guiaPre: titanPreGuia
+    guiaReport: titanGuiaReport
+    guiaMatch: titanGuiaMatch
+    amazon: amazon
+    amazonClean: amazonClean
+types:
+  movie: movie
+  serie: serie
+currency:
+  AE: AED
+  AL: ALL
+  AM: AMD
+  AO: AOA
+  AR: ARS
+  AT: EUR
+  AU: AUD
+  AZ: AZN
+  BA: BAM
+  BD: BDT
+  BE: EUR
+  BF: XOF
+  BG: BGN
+  BH: BHD
+  BI: BND
+  BJ: XOF
+  BO: BOB
+  BR: BRL
+  BW: BWP
+  BY: BYR
+  CA: CAD
+  CD: CDF
+  CF: XAF
+  CH: CHF
+  CI: CFA
+  CL: CLP
+  CM: CFA
+  CO: COP
+  CR: CRC
+  CU: CUP
+  CY: EUR
+  CZ: CZK
+  DE: EUR
+  DK: DKK
+  DO: DOP
+  DZ: DZD
+  EC: USD
+  EE: EUR
+  EG: EGP
+  ES: EUR
+  ET: ETB
+  FI: EUR
+  FR: EUR
+  GA: XAF
+  GB: GBP
+  GE: GEL
+  GH: GHS
+  GM: GMD
+  GN: GNF
+  GR: EUR
+  GT: GTQ
+  HK: JPY
+  HN: HNL
+  HR: HRK
+  HU: HUF
+  ID: IDR
+  IE: EUR
+  IL: ILS
+  PS: ILS
+  IN: INR
+  IQ: IQD
+  IS: ISK
+  IT: EUR
+  JM: JMD
+  JO: JOD
+  JP: JPY
+  KE: KES
+  KH: KHR
+  KR: KRW
+  KW: KWD
+  KZ: KZT
+  LATAM: NA
+  LA: LAK
+  LB: LBP
+  LK: LKR
+  LT: EUR
+  LU: EUR
+  LV: EUR
+  LY: LYD
+  MA: MAD
+  ME: EUR
+  MD: MDL
+  MK: MKD
+  ML: XOF
+  MM: MMK
+  MN: MNT
+  MT: EUR
+  MX: MXN
+  MY: MYR
+  MZ: MZN
+  MW: MWK
+  NA: NAD
+  NE: XOF
+  NG: NGN
+  NI: NIO
+  NL: EUR
+  NO: NOK
+  NP: NPR
+  NZ: NZD
+  OM: OMR
+  PA: PYG
+  PE: PEN
+  PY: PYG
+  PH: PHP
+  PK: PKR
+  PL: PLN
+  PT: EUR
+  QA: QAR
+  RO: RON
+  RS: RSD
+  RU: RUB
+  RW: RWF
+  SA: SAR
+  SD: SDG
+  SE: SEK
+  SG: SGD
+  SI: EUR
+  SK: EUR
+  SL: SLL
+  SN: OXF
+  SV: USD
+  TD: CFA
+  TG: XOF
+  TH: THB
+  TN: TND
+  TR: TRY
+  TW: JPY
+  TZ: TZS
+  UA: UAH
+  UG: UGX
+  US: USD
+  UY: UYU
+  UZ: USZ
+  VE: VEF
+  VN: VND
+  ZA: ZAR
+  ZM: ZMW
+  ZW: ZWL
+  YE: YER
+  SY: SYP
+  DJ: DJF
+  OTHER: ''
+locales:
+  AR: 'es_AR'
+  AT: 'de_AT'
+  AU: 'en_AU'
+  CO: 'es_CO'
+  BE: 'fr_BE'
+  BG: 'bg_BG'
+  BR: 'pt_BR'
+  CA: 'en_CA'
+  CL: 'es_CL'
+  CH: 'de_CH'
+  CZ: 'cs_CZ'
+  DE: 'de_DE'
+  DK: 'en_DK'
+  EC: 'es_EC'
+  EE: 'en_EE'
+  ES: 'es_ES'
+  FI: 'fi_FI'
+  FR: 'fr_FR'
+  GB: 'en_GB'
+  GR: 'el_GR'
+  HU: 'hu_HU'
+  ID: 'en_ID'
+  IE: 'en_IE'
+  IN: 'en_IN'
+  IT: 'it_IT'
+  JP: 'ja_JP'
+  KR: 'ko_KR'
+  LT: 'en_LT'
+  LV: 'en_LV'
+  MX: 'es_MX'
+  MY: 'en_MY'
+  NL: 'en_NL'
+  NO: 'no_NO'
+  NZ: 'en_NZ'
+  PE: 'es_PE'
+  PH: 'en_PH'
+  PL: 'pl_PL'
+  PT: 'pt_PT'
+  RO: 'ro_RO'
+  RU: 'ru_RU'
+  SE: 'en_SE'
+  SG: 'en_SG'
+  TH: 'en_TH'
+  TR: 'tr_TR'
+  US: 'en_US'
+  VE: 'es_VE'
+  ZA: 'en_ZA'
+root:
+  durations:
+    long_platforms:
+      Youtube:
+        - US
+        - AU
+        - CA
+        - GB
+        - FR
+        - DE
+      Google:
+        - US
+        - AU
+        - CA
+        - GB
+        - FR
+        - DE
+      SkyIT:
+        - IT
+    default: 21  # hs
+    max_duration: 35
+tp_sites:
+  reelgood_v3:
+    - YoutubePremiumUS
+    - YoutubeUs
+    - GoogleUs
+    - HBOUsNow
+    - AmazonUs
+    - ItunesUs
+    - NetflixUs
+    - MicrosoftUs
+    - Hulu
+    # - DisneyNOW
+    - NBCUniverso
+    # - NationalGeographic
+    - PlayStationVideo
+    - SproutNow
+    - TelemundoNow
+    - UrbanMovieChannel
+    # - Velocity
+    # - Viceland
+  globosat:
+    - CanalOff
+    - Globosat
+ott_sites:
+  AmazonPrimeVideo:
+    ###############################################
+    # Configuración de PlatformCodes disponibles. #
+    ###############################################
+    countries:
+      LATAM: "amazon-prime-video"
+      BR: "br.amazonprimevideo"
+      MX: "mx.amazonprimevideo"
+      SA: "sa.amazonprimevideo"
+      BG: "bg.amazonprimevideo"
+      HR: "hr.amazonprimevideo"
+      MT: "mt.amazonprimevideo"
+      LU: "lu.amazonprimevideo"
+      AE: "ae.amazonprimevideo"
+      BD: "bd.amazonprimevideo"
+      IL: "il.amazonprimevideo"
+      EG: "eg.amazonprimevideo"
+      RS: "rs.amazonprimevideo"
+      LK: 'lk.amazonprimevideo'
+      BH: 'bh.amazonprimevideo'
+      BF: 'bf.amazonprimevideo'
+      AM: 'am.amazonprimevideo'
+      BW: 'bw.amazonprimevideo'
+      BY: 'by.amazonprimevideo'
+      CD: 'cd.amazonprimevideo'
+      UA: 'ua.amazonprimevideo'
+      GA: 'ga.amazonprimevideo'
+      GH: 'gh.amazonprimevideo'
+      BO: 'bo.amazonprimevideo'
+      AZ: 'az.amazonprimevideo'
+      GM: 'gm.amazonprimevideo'
+      CM: 'cm.amazonprimevideo'
+      SI: 'si.amazonprimevideo'
+      SK: 'sk.amazonprimevideo'
+      HK: 'hk.amazonprimevideo'
+      CY: 'cy.amazonprimevideo'
+      ### TESTING NEW ###
+      DZ: 'dz.amazonprimevideo'
+      MW: 'mw.amazonprimevideo'
+      MM: 'mm.amazonprimevideo'
+      BI: 'bi.amazonprimevideo'
+      UZ: 'uz.amazonprimevideo'
+      CI: 'ci.amazonprimevideo'
+      KH: 'kh.amazonprimevideo'
+      BA: 'ba.amazonprimevideo'
+      TD: 'td.amazonprimevideo'
+    countries_data:
+      LATAM:
+        PlatformCode: "amazon-prime-video"
+        account: account_3
+        cookie: false # Verificar esto
+        region: "na" # Debe ser región del server
+      RS: #Serbia
+        PlatformCode: "rs.amazonprimevideo"
+        account: account_9
+        cookie: true # Verificar esto
+        region: "na"
+      BR:
+        PlatformCode: "br.amazonprimevideo"
+        account: account_3
+        cookie: true
+        region: "na" # Debe ser región del server
+        # XPATH de los CHANNELS -> cláve para el método get_channels_urls()
+        #a_url_channels: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[3]/div/div[2]/div/div/ul/li/div/div/div/a'
+      MX:
+        PlatformCode: "mx.amazonprimevideo"
+        account: account_2
+        cookie: true # Verificar esto
+        region: "na" # Debe ser región del server
+        get_store: true
+        # XPATH de los CHANNELS -> cláve para el método get_channels_urls()
+        #a_url_channels: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[5]/div/div[2]/div/div/ul/li/div/div/div/a'
+        #a_url_channels2: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[6]/div/div[2]/div/div/ul/li/div/div/div/a'
+      SA:
+        PlatformCode: "sa.amazonprimevideo"
+        account: account_4
+        cookie: true
+        region: "na" # Debe ser región del server
+      BG:
+        PlatformCode: "bg.amazonprimevideo"
+        account: account_4
+        cookie: true
+        region: "na" # Debe ser región del server
+      HR:
+        PlatformCode: "hr.amazonprimevideo"
+        account: account_4
+        cookie: true
+        region: "na" # Debe ser región del server
+      MT:
+        PlatformCode: "mt.amazonprimevideo"
+        account: account_4
+        #account: False
+        cookie: true
+        region: "na" # Debe ser región del server
+      LU:
+        PlatformCode: "lu.amazonprimevideo"
+        #account: account_4
+        account: False
+        cookie: true
+        region: "na" # Debe ser región del server
+      AE:
+        PlatformCode: "ae.amazonprimevideo"
+        account: account_8
+        cookie: true
+        has_store: false
+        region: "na"
+      BD:
+        PlatformCode: "bd.amazonprimevideo"
+        account: account_11
+        cookie: true
+        region: "eu" # Debe ser región del server
+        store_currency: 'EUR'
+        get_store: true
+      IL:
+        PlatformCode: "il.amazonprimevideo"
+        account: account_5
+        cookie: true
+        region: "na" # Debe ser región del server
+      EG:
+        PlatformCode: "eg.amazonprimevideo"
+        account: account_30
+        cookie: true
+        region: "na" # Debe ser región del server
+      LK:
+        PlatformCode: "lk.amazonprimevideo"
+        account: account_LK
+        cookie: true
+        region: "na"
+      BH:
+        PlatformCode: "bh.amazonprimevideo"
+        account: account_13
+        cookie: true
+        region: "na"
+      BF:
+        PlatformCode: "bf.amazonprimevideo"
+        account: account_14
+        cookie: true
+        region: "na"
+      AM:
+        PlatformCode: "am.amazonprimevideo"
+        account: account_15
+        cookie: true
+        region: "na"
+      BW:
+        PlatformCode: "bw.amazonprimevideo"
+        account: account_16
+        cookie: true
+        region: "na"
+      BY:
+        PlatformCode: "by.amazonprimevideo"
+        account: account_17
+        cookie: true
+        region: "na"
+      CD:
+        PlatformCode: "cd.amazonprimevideo"
+        account: account_18
+        cookie: true
+        region: "na"
+      UA:
+        PlatformCode: "ua.amazonprimevideo"
+        account: account_19
+        cookie: true
+        region: "na"
+      GA:
+        PlatformCode: "ga.amazonprimevideo"
+        account: account_20
+        cookie: true
+        region: "na"
+      GH:
+        PlatformCode: "gh.amazonprimevideo"
+        account: account_21
+        cookie: true
+        region: "na"
+      BO:
+        PlatformCode: "bo.amazonprimevideo"
+        account: account_BO
+        cookie: true
+        region: "na"
+      AZ:
+        PlatformCode: "az.amazonprimevideo"
+        account: account_AZ
+        cookie: true
+        region: "na"
+      GM:
+        PlatformCode: "gm.amazonprimevideo"
+        account: account_24
+        cookie: true
+        region: "na"
+      CM:
+        PlatformCode: "cm.amazonprimevideo"
+        account: account_25
+        cookie: true
+        region: "na"
+      SI:
+        PlatformCode: "si.amazonprimevideo"
+        account: account_26
+        cookie: true
+        region: "na"
+      SK:
+        PlatformCode: "sk.amazonprimevideo"
+        account: account_27
+        cookie: true
+        region: "na"
+      HK:
+        PlatformCode: "hk.amazonprimevideo"
+        account: account_28
+        cookie: true
+        region: "na"
+      CY:
+        PlatformCode: "cy.amazonprimevideo"
+        account: account_29
+        cookie: true
+        region: "na"
+      ### TESTING NEW ###
+      MW:
+        PlatformCode: "mw.amazonprimevideo"
+        account: account_31
+        cookie: true
+        region: "na"
+      MM:
+        PlatformCode: "mm.amazonprimevideo"
+        account: account_32
+        cookie: true
+        region: "na"
+      TG:
+        PlatformCode: "tg.amazonprimevideo"
+        account: account_TG
+        cookie: true
+        region: "na"
+      BI:
+        PlatformCode: "bi.amazonprimevideo"
+        account: account_34
+        cookie: true
+        region: "na"
+      UZ:
+        PlatformCode: "uz.amazonprimevideo"
+        account: account_35
+        cookie: true
+        region: "na"
+      CI:
+        PlatformCode: "ci.amazonprimevideo"
+        account: account_36
+        cookie: true
+        region: "na"
+      DZ:
+        PlatformCode: "dz.amazonprimevideo"
+        account: account_DZ
+        cookie: true
+        region: "na"
+      BA:
+        PlatformCode: "ba.amazonprimevideo"
+        account: account_37
+        cookie: true
+        region: "na"
+      SL:
+        PlatformCode: "sl.amazonprimevideo"
+        account: account_38
+        cookie: true
+        region: "na"
+      TD:
+        PlatformCode: "td.amazonprimevideo"
+        account: account_TD
+        cookie: true
+        region: "na"
+      KH:
+        PlatformCode: "kh.amazonprimevideo"
+        account: account_KH
+        cookie: true 
+        region: "na"
+      ZW:
+        PlatformCode: "zw.amazonprimevideo"
+        account: account_ZW
+        cookie: true 
+        region: "na"
+      SN:
+        PlatformCode: "sn.amazonprimevideo"
+        account: account_SN
+        cookie: true 
+        region: "na"
+      RW:
+        PlatformCode: "rw.amazonprimevideo"
+        account: account_RW
+        cookie: true 
+        region: "na"
+      TZ:
+        PlatformCode: "tz.amazonprimevideo"
+        account: account_TZ
+        cookie: true 
+        region: "na"
+      TH:
+        PlatformCode: "th.amazonprimevideo"
+        account: account_TH
+        cookie: true 
+        region: "na"
+      AL:
+        PlatformCode: "al.amazonprimevideo"
+        account: account_AL
+        cookie: true 
+        region: "na"
+      IS:
+        PlatformCode: "is.amazonprimevideo"
+        account: account_IS
+        cookie: true 
+        region: "na"
+      ZM:
+        PlatformCode: "zm.amazonprimevideo"
+        account: account_ZM
+        cookie: true 
+        region: "na"
+      KE:
+        PlatformCode: "ke.amazonprimevideo"
+        account: account_KE
+        cookie: true 
+        region: "na"
+      NP:
+        PlatformCode: "np.amazonprimevideo"
+        account: account_NP
+        cookie: true 
+        region: "na"
+      MD:
+        PlatformCode: "md.amazonprimevideo"
+        account: account_MD
+        cookie: true 
+        region: "na"
+      ID:
+        PlatformCode: "id.amazonprimevideo"
+        account: account_ID
+        cookie: true 
+        region: "na"
+      MA:
+        PlatformCode: "ma.amazonprimevideo"
+        account: account_MA
+        cookie: true 
+        region: "na"
+      PK:
+        PlatformCode: "pk.amazonprimevideo"
+        account: account_PK
+        cookie: true 
+        region: "na"
+      NG:
+        PlatformCode: "ng.amazonprimevideo"
+        account: account_NG
+        cookie: true 
+        region: "na"
+      TW:
+        PlatformCode: "tw.amazonprimevideo"
+        account: account_TW
+        cookie: true 
+        region: "na"
+      ME:
+        PlatformCode: "me.amazonprimevideo"
+        account: account_ME
+        cookie: true 
+        region: "na"
+      GN:
+        PlatformCode: "gn.amazonprimevideo"
+        account: account_GN
+        cookie: true 
+        region: "na"
+      CF:
+        PlatformCode: "cf.amazonprimevideo"
+        account: account_CF
+        cookie: true 
+        region: "na"
+      LA:
+        PlatformCode: "la.amazonprimevideo"
+        account: account_LA
+        cookie: true
+        region: "na"
+      NA:
+        PlatformCode: "na.amazonprimevideo"
+        account: account_NA
+        cookie: true
+        region: "na"
+      JO:
+        PlatformCode: "jo.amazonprimevideo"
+        account: account_JO
+        cookie: true
+        region: "na"
+
+    ########################
+    # Cuentas disponibles. #
+    ########################
+    accounts:
+      account_1:
+        user_name: "jmoreno@businessbureau.com" # No se está usando
+        user_pass: "KLM2012a"
+      account_2:
+        user_name: "danielanaranjo1154@outlook.com" # Para MX
+        user_pass: "darwin1154*"
+        2FA: "N2TJDP6NCA4QF6ER5SXGEAUJLBHXFUNLH7BACELK7GLKB2QBH5RQ"
+      account_3:
+        user_name: "jorgemorillo1154@outlook.com" # Para LATAM y BR
+        user_pass: "Alyssa@13"
+        2FA: 'PR4VTZKRDVQNG5UOMRLKFAKXRMJNGOHRE6TSDQFFRAE3OE6GSWYA'
+      account_4:
+        user_name: "antonelanilanes1154@gmail.com" # Para SA, BG, HR, MT, LU
+        user_pass: "darwin1154*!"
+        2FA: 'Q53VCCNU2UII7ZLYCMZRRPETZJS74NNW73SZEY57QYKCR7F7QUBA'
+      account_5:
+        user_name: "valentinaarcila1154@outlook.com" # IL
+        user_pass: "darwin1154"
+        2FA: 'KGHHYQCBH7CO7JD4FKHEIIXPBU3ARXKU5O3GA7Q2ME6AKSRFEBUA'
+      account_6:
+        user_name: "radwamortada99@gmail.com" #EG
+        user_pass: "Roger@9995"
+        2FA: 'NUDMTXFEYPYUEU725OWQW4WAXEOQYFJMANA4SMEHYYUAO2TM4OZQ'
+      account_7:
+        user_name: "hdy3585hg@hotmail.com" # BD
+        user_pass: "amar1234"
+      account_8: #para AE
+        user_name: 'marianoramirez1154@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: 'SJHHZQV5CN64PHCUJLMR2ADK73R3U2SLWAYTGYBFSIX6TB2KN3PQ'
+      account_9: #para RS
+        user_name: 'beljindragana@gmail.com'
+        user_pass: 'gledajbesplatnosad1'
+        #2FA: '4OJYYLP5TMRNLFLDLMNJHOFCS5UU6W4LCIWMOX4YJFM4QYEOJUHA'
+      account_10: #reemplazo account_4 anto (SA, BG, HR, MT, LU)
+        user_name: 'arturomontalvo1154@gmail.com'
+        user_pass: 'darwin1154*'
+      account_11: #reemplazo cuenta BD
+        user_name: 'rmowla304@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: 'IPJ7QN727JUCSM5E6WGUPLELRZYP66X4AFAJ3Q2D24B2DA2AIS5A'
+      account_LK: #para LK
+        user_name: 'josemartinez1154@outlook.com.ar'
+        user_pass: 'darwin1154'
+        2FA: '65PYZ4ZH7O2H3MIBD25QHQOVHWM2JY3AZ3SEQKX7YGSP3I7NASGQ'
+      account_13: #para BH - Bahrain
+        user_name: 'belenlopez1154@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: 'ADPAV26IHV5BMB6G2H2O3W4IIW5TTOGEFPJ65A2IWZXDLR2QNXKQ'
+      account_14: #para BF - Burkina Faso
+        user_name: 'mayorcedrio@gmail.com'
+        user_pass: 'Aracelli2021'
+      account_15: #para AM - Armenia
+        user_name: 'milagrosluna1154@outlook.com'
+        user_pass: 'Darwin1154'
+        2FA: 'RQC5QD6TLZ4EJHIDVI2AV7JPPP6K4OGMMBHU5D53LAWJLHOJJABA'
+      account_16: #para BW- Botswana
+        user_name: 'loneochuizen@gmail.com'
+        user_pass: 'bamlabam20!'
+      account_17: #para BY- Belarus
+        user_name: 'zharov.valeriy.2020@gmail.com'
+        user_pass: 'Upwork123'
+      account_18: #para CD- Congo
+        user_name: 'christiankalenga053@gmail.com'
+        user_pass: '990562' # contra vieja:'christian10'
+      account_19: #para UA - Ukraine
+        user_name: 'longtrip2u@gmail.com'
+        user_pass: 'XwHS4Nex?V@K#8G'
+      account_20: #para GA - Gabon
+        user_name: 'mipassi86@gmail.com'
+        user_pass: 'ndzembo86'
+      account_21: #para GH- Ghana
+        user_name: 'asamoahprince17@gmail.com'
+        user_pass: 'amazonconglo'
+      account_BO: #para BO- Bolivia
+        user_name: 'gerardoderivia1151@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: '2ODTSLTOUDMNCBWLQ7UMK2FTHV3NSAV2E3EXF3CWUGVBKCAG3XSA'
+      account_AZ: #para AZ
+        user_name: 'nicolaslopez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_24: #para GM - Gambia
+        user_name: 'musaadmire4@gmail.com'
+        user_pass: 'Musaadmire.1'
+      account_25: #para CM - Camerun
+        user_name: 'samuelmendoza1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'KBKL5Q4RRECQLHGUF3WN5FXFE77PFDOYCYAI5VE7DZVWFD3ELOJQ'
+      account_26: #para SI - Slovenia
+        user_name: 'gabrielagonzales1154@outlook.com'
+        user_pass: 'darwin1154'
+        #2FA: 'CV4D4EDGRLSBXG4Z4EMQFVEEHKLISH6XV7Y7U3BLHPPXQIGC2MBA' DESACTIVADA TEMPORALMENTE PARA PV
+      account_27: #para SK - Slovakia
+        user_name: 'marceloperez1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'II3SJZ4T3FIYIUINGDJGNYEKUJRWJBX4YWWUSP2SWRGXN2B2HNQA'
+      account_28: #para HK - Hong Kong
+        user_name: 'mirianmendez1154@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: 'ERISUKD5U66RJOCPFV3JLH2S4QZSRKCFJMQZM5GBLXOG7B2JN3ZA'
+      account_29: #para CY - Cyprus
+        user_name: 'nkoutsoft01@gmail.com'
+        user_pass: 'b3asy0uaRe!'
+      account_30: #para CY - Cyprus
+        user_name: 'pedropachano1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'NUDMTXFEYPYUEU725OWQW4WAXEOQYFJMANA4SMEHYYUAO2TM4OZQ'
+      
+      ### TESTING NEW ###
+      account_31: #para MW - Malawi
+        user_name: 'vanesamartinez1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'NXFJ5BKDTA5OKY5IS2KIF4T5ONRPCADYLKSRACBAL2OW7LPLASFQ'
+      account_32: #para MM - Myanmar
+        user_name: 'marielaortiz1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_TG: #para TG - Togo
+        user_name: 'lauraperez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_34: #para BI - Burundi
+        user_name: 'fernandanavarrete1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'LPBFMPKFVQE6HXPDSSLNCTD56ZICIX5O4C4XK2RR6USBXJA3RJXA'
+      account_35: #para UZ - uzbekistan
+        user_name: 'ramirorodriguez1154@outlook.com'
+        user_pass: 'darwin1154' 
+      account_36: #para CI - Côte d'Ivoire
+        user_name: 'rodrigocabrera1154@gmail.com'
+        user_pass: 'darwin1154!'
+        2FA: '347KPGZXQ3COTHXB7PR5FRFPKP2LP4GT6VPIMDAWAO5SOJTAACUA'
+      account_37: #para BA - Bosnia and Herzegovina
+        user_name: 'sofiadiaz1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'DOPH7UW4XUWOMNIRJ7AT665MWRPF4NPEKKHEICKSIOG6OAM47J3A'
+      account_38: #para SL - Sierra Leone
+        user_name: 'rocioperez1154@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: 'PH23Y26UPQJDMXIA4WACFHL7NTVPWVZSLNXP6QT6RCK3472LFZXA'
+      account_DZ: #para DZ - Algeria
+        user_name: 'catalinamurillo1154@outlook.com'
+        user_pass: 'darwin1154'
+        2FA: 'W7SRBNTRXMNOESIXSHJUXW7FN34RFTMAGYIT5F5TBGKBWXG2VGNA'
+      account_TD: #para TD - Chad
+        user_name: 'martaperez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_KH: #para KH - Cambodia
+        user_name: 'agustingonzales1154@gmail.com'
+        user_pass: 'darwin1154'
+        2FA: '5M66TZOVFACNDPVCFP6UL4MTYQLBPYB4ML74SVXSM4IWWMWDWHDQ'
+      account_ZW: #para ZW - Zimbabwe
+        user_name: 'emanuelramirez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_SN: #para SN - Senegal
+        user_name: 'martinortiz1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_RW: #para rw - rwanda
+        user_name: 'antonio.stark1154@gmail.com'
+        user_pass: 'darwin1154$'
+        2FA: 'EFIU6WCYRVTGX6INR6XIRGRDLJOJ3CDLKUIWUQPJ4JSGRETVB4JA'
+      account_TZ: #para TZ - Tanzania
+        user_name: 'martinalopez1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_TH: #para TH - Thailand
+        user_name: 'albertomurillo1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_AL: #para AL - Albania
+        user_name: 'ricardofort1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_IS: #para IS - Iceland
+        user_name: 'maximocosetti1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_ZM: #para ZM - Zambia
+        user_name: 'pabloherrera1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_KE: #para KE - Kenya
+        user_name: 'osvaldomendeleiev1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_NP: #para NP - Nepal
+        user_name: 'silvanamoruga1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_MD: #para MD - Moldova
+        user_name: 'carlagonzalez1554@gmail.com'
+        user_pass: 'darwin1154'
+      account_ID: #para ID - Indonesia
+        user_name: 'nahuel.nauer@gmail.com'
+        user_pass: 'darwin1154'
+      account_MA: #para MA - Morocco
+        user_name: 'mercedesbenitez1154@gmail.com'
+        user_pass: 'darwin1154*'
+      account_PK: #para PK - Pakistan
+        user_name: 'silvanarossi1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_NG: #para NG - Nigeria
+        user_name: 'soledadrodriguez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_TW: #para TW - Taiwan
+        user_name: 'soledadrodriguez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_ME: #para ME - Montenegro
+        user_name: 'soledadrodriguez1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_GN: #para GN - Guinea
+        user_name: 'mauromartinez1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_CF: #para CF - Central African Republic
+        user_name: 'miguelgomez1154@gmail.com'
+        user_pass: 'darwin1154'
+      account_JO: #para JO - Jordan
+        user_name: 'raulvargaz1154@outlook.com'
+        user_pass: 'darwin1154'
+      account_NA: #para NA - Namibia
+        user_name: 'lucasmaximoff1154@outlook.com'
+        user_pass: 'darwin1154'
+
+      
+    ####################
+    # URLS Principales.#
+    ####################
+    start_url: 'https://www.primevideo.com/auth-redirect/ref=atv_nb_sign_in?signin=1&returnUrl=%2Fref%3Datv_unknown'
+    deeplink: 'https://www.primevideo.com{href}' # -> OLD DEEPLINK
+    deeplink2: 'https://app.primevideo.com/detail?gti={href}' # -> NEW DEEPLINK
+    url_api: 'https://www.primevideo.com/region/{region}/gp/video/api/search?queryToken={token}&queryPageType=browse&ref_=atv_sr_infinite_scroll&pageId=default&startIndex={itemsStart}&totalItems=15&refMarker=atv_sr_infinite_scroll&ie=UTF8'
+    ###########################################################
+    # URLS del catálogo de series, movies, channels y stores. #
+    ###########################################################
+    urlsNav:
+      movie   : https://www.primevideo.com/storefront/movie/ref=atv_nb_sf_mv
+      serie   : https://www.primevideo.com/storefront/tv/ref=atv_nb_sf_tv
+    url_store: https://www.primevideo.com/storefront/ref=nav_shopall_aiv_vid?merchId=RentBuy&ie=UTF8
+    url_channel : https://www.primevideo.com/storefront/channels/ref=atv_nb_sf_ch
+    url_original: https://www.primevideo.com/hp/video/api/search?phrase=amazon original&queryToken=&pageId=&queryPageType=&ref_=atv_sr_infinite_scroll&startIndex={start_index}&isCrow=1&useNodePlayer=1&totalItems={total}&refMarker=atv_sr_infinite_scroll&isHover2019=1&shouldShowPrimeSigns=1&ie=UTF8
+    ###########
+    # Queries #
+    ###########
+    queries:
+      user_name: '//input[contains(@id,"ap_email")]'
+      user_pass: '//input[contains(@id,"ap_password")]'
+      code_2fa: '//input[contains(@id, "auth-mfa-otpcode")]'
+      btn_login: '//input[contains(@id,"signInSubmit")]'
+      btn_login2: '//input[contains(@id,"auth-signin-button")]'
+      btn_otp: '//input[contains(@id,"auth-send-code")]'
+      chk_otp: '//input[contains(@value,", TOTP")]'
+      html: 'html'
+      a_see_more: '//a[contains(@class,"see-more")]' # Aplico Regex
+      div_all_categories: '//div[contains(@class,"u-collection tst-collection")]' # Aplico Regex
+      a_categories: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[{last_categorie}]/div/div[2]/div/div/ul/li/div/a'
