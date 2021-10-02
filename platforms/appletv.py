@@ -8,6 +8,7 @@ import time
 import requests
 import json
 from datetime import datetime
+from handle.mongo import mongo
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import re
@@ -25,6 +26,9 @@ class AppleTV():
         self.insert_many_to_db = db_conection.insertMany
         self.insert_one_to_db = db_conection.insert
         self.scraped = []
+        self.mongo = mongo()        
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
         self.trending_movies = []
         self.trending_shows = []
         self.top_ten_movies = []
@@ -165,9 +169,10 @@ class AppleTV():
             self.insert_many_to_db(payloads)
         self.currentSession.close()
 
+        self.mongo.insertMany(self.titanTopMovies, self.top_ten_movies) 
+        self.mongo.insertMany(self.titanTopSeries, self.top_ten_shows)  
         print(f'\nFinished\n') 
 
-        #Upload(self._platform_code, self._created_at, testing=testing)
         
     def getUrl(self, url):
         requestsTimeout = 5
@@ -399,7 +404,7 @@ class AppleTV():
                 top_ten = all_trs[:10]
                 for content in top_ten:
                     data_info = content.find('td',{'class':'titleColumn'})
-                    title = data_info.find('a').text
+                    title = data_info.find('a').text   
                     trending_shows.append({'title':title})
 
         self.trending_movies = self.set_dct(trending_movies)
