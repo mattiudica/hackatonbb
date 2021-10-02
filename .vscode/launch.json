@@ -6,12 +6,12 @@
     "configurations": [
 
         {
-            "name": "AmazonPrimeVideo",
+            "name": "HBO",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args" : ["AmazonPrimeVideo", "--c", "IL", "--o", "testing"]
+            "args" : ["HBO", "--c", "AR", "--o", "testing"]
         },
         
     ]

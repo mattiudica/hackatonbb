@@ -15,7 +15,7 @@ from common                 import config
 from bs4                    import BeautifulSoup
 from datetime               import datetime
 from handle.mongo           import mongo
-from updates.upload         import Upload
+#from updates.upload         import Upload
 from selenium               import webdriver
 from datetime               import datetime, date
 from handle.replace         import _replace
