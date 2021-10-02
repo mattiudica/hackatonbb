@@ -1,0 +1,20 @@
+1633155448632	geckodriver	INFO	Listening on 127.0.0.1:20775
+1633155449631	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofile7on2BR"
+1633155449851	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\Administrador\\AppData\\Local\\Temp\\rust_mozprofile7on2BR\\search.json.mozlz4", (void 0)))
+1633155451171	Marionette	INFO	Listening on port 20781
+1633155451679	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://player.theplatform.com/pdk/dCK2IC/tpPdkController.js?pdk=5.7.5&logLevel=debug, line 227: TypeError: this.iframe.contentWindow is undefined
+JavaScript error: https://editorial.rottentomatoes.com/wp-content/themes/RottenTomatoes/js/rtmain.js, line 336: TypeError: document.getElementById(...) is null
+JavaScript error: https://editorial.rottentomatoes.com/guide/popular-movies/ line 242 > injectedScript, line 1: TypeError: a is null
+JavaScript warning: https://editorial.rottentomatoes.com/RGz4jrYdqg6IvpefWlrJxWpjB18/r9aShGwLSE/C0QIeWs8Bw/Yj0/WDWELaioB, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+1633155458185	Marionette	INFO	Stopped listening on port 20781
+JavaScript error: https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.js, line 166: Error: Script error for: jwplayer
+http://requirejs.org/docs/errors.html#scripterror
+JavaScript error: https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.js, line 166: Error: Script error for: facebook
+http://requirejs.org/docs/errors.html#scripterror
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+JavaScript error: chrome://remote/content/marionette/cert.js, line 55: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
