@@ -232,19 +232,11 @@ class AmazonPrimeVideo():
         ten_urls = []
         time.sleep(3)
         browser.execute_script("window.scroll(0, 1600)")
-<<<<<<< HEAD
         time.sleep(15)
         try:
             browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/button').click()
         except:
             raise Exception("No se encuentra disponible el top 10 en este pais")
-=======
-        time.sleep(10)
-        try:
-            browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/button').click()
-        except Exception:
-            return ''
->>>>>>> amazonprimevideo
         time.sleep(3)
         section = browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/ul')    
         li  = section.find_elements_by_tag_name('li')
@@ -313,10 +305,6 @@ class AmazonPrimeVideo():
         else:
             print('FIN DE LA EJECUCION NO SE ENCONTRO TOP TEN!')
         # Corroborar que cierre bien el browser.
-<<<<<<< HEAD
-
-=======
->>>>>>> amazonprimevideo
         browser.close()
         time.sleep(5)
         browser.quit()
