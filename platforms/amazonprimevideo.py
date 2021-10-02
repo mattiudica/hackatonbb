@@ -25,19 +25,10 @@ import db_conection
 class AmazonPrimeVideo():
     """
      - Recomendación de VPNS:
-            LATAM: "amazon-prime-video" -> No hace falta.
+            LATAM: "amazon-prime-video" -> No hace falta.(Chequear si el banner principal es top 10)
             BR: "br.amazonprimevideo" -> ExpressVPN
-            MX: "mx.amazonprimevideo" -> Correr en compu de México.
-            SA: "sa.amazonprimevideo" -> GoshVPN
-            BG: "bg.amazonprimevideo" -> ExpressVPN
-            HR: "hr.amazonprimevideo" -> ExpressVPN
-            MT: "mt.amazonprimevideo" -> GoshVPN
-            LU: "lu.amazonprimevideo" -> ExpressVPN
-            AE: "ae.amazonprimevideo" -> GoshVPN o PureVPN
-            BD: "bd.amazonprimevideo" -> GoshVPN
             IL: "il.amazonprimevideo" -> ExpressVPN
-            EG: "eg.amazonprimevideo" -> GoshVPN
-    
+            AE: "ae.amazonprimevideo" -> GoshVPN o PureVPN
         - Cuentas: Hay casos que con la misma cuenta se puede acceder a
         contenido de distintos países, pero esto es relativo. Este tema
         aún está en análisis.
@@ -59,7 +50,7 @@ class AmazonPrimeVideo():
         self.url_original       = self._config['url_original']
         
         # BBDD's.
-
+        self.insert_many_to_db = db_conection.insertMany
         # ACCOUNT DATA.
         self.account            = self._config['countries_data'][ott_site_country]['account']
         if self.account:
@@ -137,7 +128,11 @@ class AmazonPrimeVideo():
                     browser.find_element_by_xpath(self._config['queries']['btn_otp']).click()
                 except:
                     pass
-
+                try:
+                    browser.find_element_by_id('continue').click()
+                except:
+                    pass
+                time.sleep(3)
                 codes2FA = browser.find_element_by_xpath(self._config['queries']['code_2fa'])
                 code2FA = self.loggin_info['2FA']
                 totp = pyotp.TOTP(code2FA)
@@ -237,11 +232,19 @@ class AmazonPrimeVideo():
         ten_urls = []
         time.sleep(3)
         browser.execute_script("window.scroll(0, 1600)")
+<<<<<<< HEAD
         time.sleep(15)
         try:
             browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/button').click()
         except:
             raise Exception("No se encuentra disponible el top 10 en este pais")
+=======
+        time.sleep(10)
+        try:
+            browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/button').click()
+        except Exception:
+            return ''
+>>>>>>> amazonprimevideo
         time.sleep(3)
         section = browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/ul')    
         li  = section.find_elements_by_tag_name('li')
@@ -287,18 +290,33 @@ class AmazonPrimeVideo():
             "url_top_ten_movies"  : self.get_movies_url(browser)
         }
         
-        for url in urls['url_top_ten_movies']:
-            self.get_data(url,browser,insert_in ='movies')
+        if not(urls['url_top_ten_overall'] == '' and  urls['url_top_ten_series'] == '' and  urls['url_top_ten_movies'] == ''):
+            if urls['url_top_ten_movies'] != '':
+                for url in urls['url_top_ten_movies']:
+                    self.get_data(url,browser,insert_in ='movies')
             
-        for url in urls['url_top_ten_series']:
-            self.get_data(url,browser,insert_in ='serie')
+            if urls['url_top_ten_series'] != '':
+                for url in urls['url_top_ten_series']:
+                    self.get_data(url,browser,insert_in ='serie')
+            
+            if urls['url_top_ten_overall'] != '':
+                for url in urls['url_top_ten_overall']:
+                    self.get_data(url,browser,insert_in ='overall')
+        
+            print(f' DICCIONARIO TOP 10 MOVIES  {self.payload_top_movies}')
+            print(f' DICCIONARIO TOP 10 SERIES  {self.payload_top_series}')
+            print(f' DICCIONARIO TOP 10 OVERALL {self.payload_top_overall}')
 
-        for url in urls['url_top_ten_overall']:
-            self.get_data(url,browser,insert_in ='overall')
-
-
+            self.insert_many_to_db(self.payload_top_movies)
+            self.insert_many_to_db(self.payload_top_series)
+            self.insert_many_to_db(self.payload_top_overall)
+        else:
+            print('FIN DE LA EJECUCION NO SE ENCONTRO TOP TEN!')
         # Corroborar que cierre bien el browser.
+<<<<<<< HEAD
 
+=======
+>>>>>>> amazonprimevideo
         browser.close()
         time.sleep(5)
         browser.quit()
@@ -326,13 +344,13 @@ class AmazonPrimeVideo():
         html_soup = BeautifulSoup(response.text, 'lxml')
         
         if insert_in == 'movies':
-            self.payload_top_movies.append(self.get_payload(html_soup,url,packages,type_)) 
+            self.payload_top_movies.append(self.get_payload(html_soup,url,packages,type_,'movies')) 
         if insert_in == 'serie':
-            self.payload_top_series.append(self.get_payload(html_soup,url,packages,type_))
+            self.payload_top_series.append(self.get_payload(html_soup,url,packages,type_,'series'))
         if insert_in == 'overall':
-            self.payload_top_overall.append(self.get_payload(html_soup,url,packages,type_))
+            self.payload_top_overall.append(self.get_payload(html_soup,url,packages,type_,'overall'))
 
-    def get_payload(self, html_soup,deeplink,packages, type_):
+    def get_payload(self, html_soup,deeplink,packages, type_,top):
         payload = Payload()
 
         payload.platform_code = self._platform_code
@@ -363,6 +381,7 @@ class AmazonPrimeVideo():
         payload.rating = self.get_rating(html_soup)
         payload.image = self.get_images(html_soup)
         payload.is_adult = self.get_is_adult(payload.rating)
+        payload._top = top
         payload.packages = packages
         payload.createdAt = self._created_at
         if type_ == 'movie':

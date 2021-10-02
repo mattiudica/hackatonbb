@@ -2,7 +2,7 @@ from datetime import datetime
 from handle.replace import _replace
 
 
-class Payload:
+class   Payload:
     def __init__(self, platform_code: str=None,
                  id_: str=None,
                  title: str=None,
@@ -15,6 +15,7 @@ class Payload:
                  deeplink_ios: str=None,
                  playback: str=None,
                  synopsis: str=None,
+                 top: str=None,
                  image: list=None,
                  rating: str=None,
                  provider: list=None,
@@ -53,6 +54,7 @@ class Payload:
         self._deeplink_ios = deeplink_ios
         self._playback = playback
         self._synopsis = synopsis
+        self._top = top
         self._image = image
         self._rating = rating
         self._provider = provider
@@ -88,7 +90,7 @@ class Payload:
     @platform_code.setter
     def platform_code(self, new_platform):
         self._platformCode = new_platform
-
+    
     @property
     def id(self):
         return self._id
@@ -177,6 +179,14 @@ class Payload:
     @synopsis.setter
     def synopsis(self, new_synopsis):
         self._synopsis = new_synopsis
+
+    @property
+    def top(self):
+        return self._top
+
+    @top.setter
+    def top(self, new_top):
+        self._top = new_top
 
     @property
     def image(self):
@@ -424,6 +434,7 @@ class Payload:
             'IsBranded': self._is_branded,
             'Packages': self._packages,
             'Country': self._country,
+            'top':     self._top,
             'Timestamp': self._timestamp,
             'CreatedAt': self._created_at
         }
@@ -462,6 +473,7 @@ class Payload:
             'IsBranded': self._is_branded,
             'IsAdult': self._is_adult,
             'Packages': self._packages,
+            'top':     self._top,
             'Country': self._country,
             'Timestamp': self._timestamp,
             'CreatedAt': self._created_at
