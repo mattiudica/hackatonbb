@@ -4,6 +4,10 @@ env
 #bynaries
 __pycache__
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> amazonprimevideo
 #vscode
 .vscode
 

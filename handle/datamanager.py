@@ -34,54 +34,15 @@ class Datamanager():
     '''
     def __init__(self):
         self.mongo                  = mongo()
-        self.titanScraping          = config()['mongo']['collections']['scraping']
-        self.titanScrapingEpisodios = config()['mongo']['collections']['episode']
+        self.titanTopOverall = config()['mongo']['collections']['topOverall']
+        self.titanTopMovies = config()['mongo']['collections']['scraping']
+        self.titanTopSeries = config()['mongo']['collections']['scraping']
+        self.titanTopKids = config()['mongo']['collections']['scraping']
+        self.titanTopMovies = config()['mongo']['collections']['scraping']
+        self.titanTopSeries = config()['mongo']['collections']['scraping']
         self.sesion                 = requests.session()
 
-    def _getListDB(self, DB):
-        '''
-        Hace una query al mongo local con el codigo de plataforma y devuelve una lista de contenidos de esa plataforma
-        '''
-        if DB == self.titanScraping:
-            listDB = self.mongo.db[DB].find({'PlatformCode': self._platform_code, 'CreatedAt': self._created_at}, projection={'_id': 0, 'Id': 1, 'Title': 1})
-        else:
-            listDB = self.mongo.db[DB].find({'PlatformCode': self._platform_code, 'CreatedAt': self._created_at}, projection={'_id': 0, 'Id': 1, 'Title': 1, 'ParentId' : 1})
-        listDB = list(listDB)
-
-        return listDB
-
-    def _checkDBandAppend(self, payload, listDB, listPayload, currentItem=0, totalItems=0, isEpi=False, hasDuplicates=False):
-        '''
-        - Recibe:
-            - El payload del contenido a insertar
-            - La lista del mongo local, que se deberia haber sacado antes con _getListDB()
-            - La lista de payloads del script
-            - Si se tiene la cantidad de contenidos que tiene la plataforma de antemano, usar currentItem y totalItems (opcional)
-            - isEpi determina si el payload es de contenido o de episodios
-            - hasDuplicates es una opcion extra que se puede agregar si la plataforma esta dando error de duplicados en los episodios. Hace que los IDs se chequeen directamente
-            y no como lo hace por defecto, que mira duplicados solo dentro del ParentId.
-
-        Luego de chequear si ya existe el contenido en la lista de mongo, usa el metodo noInserta() o inserta()
-        '''
-        if isEpi:
-            if hasDuplicates: #Esta opcion hace que solo chequee IDs sin mirar el parent, para evitar
-                              #duplicacion de IDs entre distintos ParentId
-                if any((payload['Id'] == d['Id']) for d in listDB):
-                    Datamanager.noInserta(self,payload,listDB,listPayload,currentItem,totalItems,isEpi)
-                else:
-                    Datamanager.insertar(self,payload,listDB,listPayload,currentItem,totalItems,isEpi)
-            else:
-                if any((payload['Id'] == d['Id'] and payload['ParentId'] == d['ParentId']) for d in listDB):
-                    Datamanager.noInserta(self,payload,listDB,listPayload,currentItem,totalItems,isEpi)
-                else:
-                    Datamanager.insertar(self,payload,listDB,listPayload,currentItem,totalItems,isEpi)
-        else:
-            if any(payload['Id'] == d['Id'] for d in listDB):
-                Datamanager.noInserta(self,payload,listDB,listPayload,currentItem,totalItems,isEpi)
-            else:
-                Datamanager.insertar(self,payload,listDB,listPayload,currentItem,totalItems,isEpi)
-
-
+   
     def noInserta(self, payload, listDB, listPayload, currentItem=0, totalItems=0, isEpi=False):
         '''
         Este metodo se usa solo en _checkDBandAppend() NO usar en scripts!!!
@@ -235,16 +196,17 @@ class Datamanager():
         '''
         if len(listPayload) != 0:
             self.mongo.insertMany(DB, listPayload)
-            if DB == self.titanScraping:
+            if DB == self.titanTopMovies:
+                print("\x1b[1;33;40m INSERTADAS {} PELICULAS \x1b[0m".format(len(listPayload)))
+                listPayload.clear()
+            elif DB == self.titanTopKids:
                 print("\x1b[1;33;40m INSERTADAS {} PELICULAS/SERIES \x1b[0m".format(len(listPayload)))
-                print("\x1b[1;33;40m SKIPPED {} PELICULAS/SERIES \x1b[0m".format(self.skippedTitles))
                 listPayload.clear()
-            elif DB == self.titanScrapingEpisodios:
-                print("\x1b[1;33;40m INSERTADOS {} EPISODIOS \x1b[0m".format(len(listPayload)))
-                print("\x1b[1;33;40m SKIPPED {} EPISODIOS \x1b[0m".format(self.skippedEpis))
+            elif DB == self.titanTopSeries:
+                print("\x1b[1;33;40m INSERTADAS {} SERIES \x1b[0m".format(len(listPayload)))
                 listPayload.clear()
-            else:
-                print("\x1b[1;33;40m INSERTADAS {} ENTRADAS \x1b[0m".format(len(listPayload)))
+            elif DB == self.titanTopOverall:
+                print("\x1b[1;33;40m INSERTADAS {} PELICULAS/SERIES \x1b[0m".format(len(listPayload)))
                 listPayload.clear()
 
     def _getSoup(self, URL, headers={}, showURL=True, timeOut=0):

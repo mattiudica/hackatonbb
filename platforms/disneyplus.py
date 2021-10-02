@@ -10,6 +10,7 @@ path = os.path.abspath('.')
 sys.path.insert(1, path)
 import db_conection
 import requests
+from common import config
 
 class DisneyPlus():
     def __init__(self, ott_site_uid, ott_site_country, type):
@@ -23,6 +24,10 @@ class DisneyPlus():
         self.password             = 'KLM2012a'
         self.main_url             = 'https://www.disneyplus.com'
         self.payloads             = []
+        self._config            = config()['ott_sites'][ott_site_uid]
+        self.mongo = mongo()   
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
 
         if type == 'testing':
             self.scraping()
@@ -143,9 +148,6 @@ class DisneyPlus():
         """
 
         _id             = content['contentId']
-        
-        seasons_payload = None
-        crew            = None
         try:
             deeplink        = main_url+'/series/'+content['text']['title']['slug']['program']['default']['content']+'/'+content['encodedSeriesId']
         except:

@@ -18,3 +18,80 @@ JavaScript error: chrome://remote/content/marionette/cert.js, line 55: NS_ERROR_
 
 ###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
 
+1633168305462	geckodriver	INFO	Listening on 127.0.0.1:53761
+1633168306470	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileBbPMCS"
+1633168307726	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileBbPMCS/search.json.mozlz4", (void 0)))
+1633168309211	Marionette	INFO	Listening on port 44051
+1633168309301	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1633168569215	Marionette	INFO	Stopped listening on port 44051
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+1633168680941	geckodriver	INFO	Listening on 127.0.0.1:50011
+1633168680947	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileSVWrFo"
+1633168681993	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileSVWrFo/search.json.mozlz4", (void 0)))
+1633168683465	Marionette	INFO	Listening on port 38127
+1633168683582	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1633168921843	Marionette	INFO	Stopped listening on port 38127
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1633169103459	geckodriver	INFO	Listening on 127.0.0.1:48031
+1633169103468	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileaaRVeF"
+1633169104541	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileaaRVeF/search.json.mozlz4", (void 0)))
+1633169106056	Marionette	INFO	Listening on port 41043
+1633169106120	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: , line 0: uncaught exception: Timed out in 15000 ms
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.aaba08cf-506c-9994-3ea2-e0d0cf4b9be6 with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.d8b655d3-6b07-e68d-14a3-38815682b765 with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.6eb5f3a8-38a1-9dfb-585b-8b77880484ce with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.acb50100-3263-4e00-bf97-a078b2394a9b with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.10b86670-e6ae-e899-e0d7-45c43d0d25b8 with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.76b241db-6732-eb21-f166-f4e20ba93453 with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.eab035f7-a158-1aff-6397-912981088d73 with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.94b8a183-20f6-026c-b305-63c174092dc3 with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.35434541-73dc-4f9f-a096-c60a17eb028a with placement type HOVER
+JavaScript error: , line 0: uncaught exception: EnrichItemMetadata failed to respond with enrichment for title ID amzn1.dv.gti.08b77713-03f8-a1ac-489b-adf652d0b190 with placement type HOVER
+JavaScript error: , line 0: NetworkError: AutoCancel
+1633169420306	Marionette	INFO	Stopped listening on port 41043
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+1633170411421	geckodriver	INFO	Listening on 127.0.0.1:39911
+1633170411427	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile5lkMla"
+1633170412502	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile5lkMla/search.json.mozlz4", (void 0)))
+1633170414246	Marionette	INFO	Listening on port 42567
+1633170414358	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1633170652559	Marionette	INFO	Stopped listening on port 42567
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+1633171061178	geckodriver	INFO	Listening on 127.0.0.1:47035
+1633171061182	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileVyZGMB"
+1633171089347	geckodriver	INFO	Listening on 127.0.0.1:49557
+1633171090355	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileRsPp7E"
+1633171091788	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileRsPp7E/search.json.mozlz4", (void 0)))
+1633171094441	Marionette	INFO	Listening on port 46713
+1633171094546	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://images-na.ssl-images-amazon.com/images/I/71QA2qlWPdL.js?AUIClients/FWCIMAssets, line 289: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+1633171526391	geckodriver	INFO	Listening on 127.0.0.1:35465
+1633171526398	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile9nwg9G"
+1633171527462	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile9nwg9G/search.json.mozlz4", (void 0)))
+1633171528941	Marionette	INFO	Listening on port 35691
+1633171529052	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1633171798755	Marionette	INFO	Stopped listening on port 35691
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+console.warn: services.settings: main/url-classifier-skip-urls sync interrupted by shutdown
+console.warn: services.settings: main/pioneer-study-addons-v1 sync interrupted by shutdown
+1633173379995	geckodriver	INFO	Listening on 127.0.0.1:34263
+1633173380002	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile6qcQ2a"
+1633173381299	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile6qcQ2a/search.json.mozlz4", (void 0)))
+1633173382806	Marionette	INFO	Listening on port 44825
+1633173382859	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1633173623631	Marionette	INFO	Stopped listening on port 44825
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
