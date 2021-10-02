@@ -17,8 +17,8 @@ from common import config
 class AppleTV():
     def __init__(self, ott_site_uid, ott_site_country, operation='testing'):
         
-        self._config                = config()['ott_sites'][ott_site_uid]
-        self._platform_code         = self._config['countries'][ott_site_country]
+        self._config  = config()['ott_sites'][ott_site_uid]
+        self._platform_code  = self._config['countries'][ott_site_country]
         self._created_at  = time.strftime("%Y-%m-%d")
         self.headers  = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0'}
         self.currentSession = requests.session()
@@ -43,7 +43,6 @@ class AppleTV():
         id_list = []
         for item in data['data']['items']:
             _id = item['id']
-            # print(_id)
             id_list.append(_id)
 
         apple_url= "https://tv.apple.com/"
@@ -54,7 +53,6 @@ class AppleTV():
         
         id_list=list(set(id_list))
         
-
         for content in id_list:
             url = 'https://tv.apple.com/api/uts/v2/view/show/{}?utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'.format(content)
             print('CONTENT URL ',url)
@@ -99,7 +97,6 @@ class AppleTV():
                 _timestamp = str(_timestamp)
                 _timestamp = _timestamp[:-3]
                 _timestamp = int(_timestamp)
-                date_ = datetime.date.fromtimestamp(_timestamp)
                 year = datetime.date.fromtimestamp(_timestamp)
                 year = str(year)
                 year = year.split('-')
@@ -167,14 +164,6 @@ class AppleTV():
         if payloads:
             self.insert_many_to_db(payloads)
         self.currentSession.close()
-        
-        print(f'\n\n')
-        if self.top_ten_movies:
-            for movie in self.top_ten_movies:
-                pprint.pprint(movie)
-        if self.top_ten_shows:
-            for show in self.top_ten_shows:
-                pprint.pprint(show)       
 
         print(f'\nFinished\n') 
 
@@ -221,7 +210,6 @@ class AppleTV():
         data= BeautifulSoup(response.text, "html.parser")
         ids=[]
         list_of_li = data.find_all("li",{"class":"shelf-grid__list-item"})
-        # print(list_of_li)
         for li in list_of_li:
             div= li.find('div',{'class': 'canvas-lockup'})
             if not div:
@@ -231,7 +219,6 @@ class AppleTV():
             data= div.get('data-metrics-click')
             data= json.loads(data) 
             id= data['targetId']
-            # print(id)
             ids.append(id)
         for li in list_of_li:
             div= li.find('a',{'class': 'notes-lockup'})
@@ -244,7 +231,6 @@ class AppleTV():
             id= data['targetId']
             print(id)
             ids.append(id)
-
         return ids
 
     def get_year_from_soup(self, soup):
@@ -279,7 +265,6 @@ class AppleTV():
     
     
     def get_roles(self, roles_data):
-        
         cast = []
         directors = []
         crew = []
