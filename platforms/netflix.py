@@ -31,6 +31,7 @@ from selenium.webdriver.firefox.options             import Options
 
 
 
+
 class Login():
     
     def __init__(self, ott_site_uid, ott_site_country, type):
@@ -46,9 +47,9 @@ class Login():
         self._created_at                = time.strftime('%Y-%m-%d')
         self.mongo                      = mongo()
         # self.currency                   = config()['currency'][ott_site_country]
-        self.titanScraping              = config()['mongo']['collections']['scraping']
-        self.titanScrapingEpisodios     = config()['mongo']['collections']['episode']
-        self.titanPreScraping           = config()['mongo']['collections']['prescraping']
+        self.titanTopOverall = config()['mongo']['collections']['scraping']
+        self.titanTopMovies = config()['mongo']['collections']['scraping']
+        self.titanTopSeries = config()['mongo']['collections']['scraping']
         self.headers  = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         self.currentSession = self.sesion = requests.session()
         self.skippedEpis = 0
@@ -57,17 +58,7 @@ class Login():
         self.browser = webdriver.Firefox() 
         self.payloads = []
         self.lista_ids = []
-
-        ######################### REGEX para JP ##################################
-        self.regex_epi_1 = re.compile(r'(第?\d+|第\D+)(話|章|回|集|試|幕|食目|時限目|曲|滑走|χ|斤|撃|夜|問|首|柱|弾|羽|試合|節|品目|号|日目|巻|席|球|軒目|怪|条|箱|憑目|病)')
-        self.regex_epi_2 = re.compile(r'(Ep|エピソード|EPISODE|Eps|DAY|♯|#|＃|Part|Lesson|プロファイル|File|Mission|ファイル|Station|Story|Round|PHASE-|OPE|Lv|Episodio|Life|STAGE|標的|CODE|KARTE|EX|ROAD|chapter|Lecon|act|Op|No|CHANGE|GP-|イメージ|ディメンジョン|Task|vol|ページ|case|レベル|ルーン|SAILING|Target|Phase|page|その|レッスン|Quest|Epi|Agenda|Piece|SCENE|Target|Fight|refre)\☆?\:?\.?\s?\d+', re.IGNORECASE)
-        self.regex_season_1 = re.compile(r'(シーズン|season|S\.|第)\s?\d+(期|シリーズ)?', re.IGNORECASE)
-        self.regex_season_2 = re.compile(r'\d+(st|nd|rd|th)\s?season', re.IGNORECASE)
-        self.regex_espacio = re.compile(r'\s')
-        self.regex_corchetes = re.compile(r'【.+?】')
-        self.regex_parentesis = re.compile(r'(（|\().+?(\)|）)')
-        ##########################################################################
-        
+       
         if type == 'scraping':
             self._scraping()
 
@@ -128,8 +119,20 @@ class Login():
                             self.get_position(match)
                             id_ = re.search('[0-9]{8,}',link).group(0)
                             deeplink = 'https://www.netflix.com/browse?jbv={}'.format(id_)
-                            self.get_payloads(deeplink, id_, itemId.div.text, top_position)
-            print('a')
+                            payloads = self.get_payloads(deeplink, id_, itemId.div.text, top_position)
+            
+            if self.overall == True:
+                self.mongo.insertMany(self.titanTopOverall, payloads)
+            if self.movies == True:
+                self.mongo.insertMany(self.titanTopMovies, payloads) 
+            if self.series == True:
+                self.mongo.insertMany(self.titanTopSeries, payloads) 
+
+                        
+            
+
+
+                
             
 
         
