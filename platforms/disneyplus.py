@@ -1,8 +1,10 @@
 import sys
 import os
 import time
-import datetime
+from handle.replace                 import _replace
+from datetime import datetime
 import json
+from common import config
 from typing import Counter
 path = os.path.abspath('.')
 sys.path.insert(1, path)
@@ -11,12 +13,13 @@ import requests
 from common import config
 
 class DisneyPlus():
-    def __init__(self,ott_site_uid):
+    def __init__(self, ott_site_uid, ott_site_country, type):
+        self._config              = config()['ott_sites'][ott_site_uid]
         self.insert_many_to_db    = db_conection.insertMany
         self.insert_one_to_db     = db_conection.insert
         self._created_at          = time.strftime("%Y-%m-%d")
-        self.country_code         = 'AR' #Modify
-        self._platform_code       = 'ar.disneyplus' #modify
+        self.country_code         = ott_site_country
+        self._platform_code       = self._config['countries'][ott_site_country]
         self.email                = 'support@bb.vision'
         self.password             = 'KLM2012a'
         self.main_url             = 'https://www.disneyplus.com'
@@ -26,7 +29,10 @@ class DisneyPlus():
         self.titanTopMovies = config()['mongo']['collections']['topMovies']
         self.titanTopSeries = config()['mongo']['collections']['topSeries']
 
-    def scrap(self):
+        if type == 'testing':
+            self.scraping()
+
+    def scraping(self):
 
         apis_data = [
         {
@@ -55,6 +61,8 @@ class DisneyPlus():
 
                 if data['type'] == 'series':
                     self.create_payload_serie(content,title,self.main_url)
+                if data['type'] == 'movie':
+                    self.create_payload_movie(content,title,self.main_url)
                 counter = counter + 1
 
     def create_payload_serie(self,content,title,main_url):
@@ -85,13 +93,13 @@ class DisneyPlus():
         country_list    = None
         package_serie   = [{'Type': 'subscription-vod'}]
 
-        print('ADDED ',title,' - ',_id)
+        print('----------------------------------')
+        print('ADDED ',title,' - ',_id, ' - ',deeplink)
 
         if content['tags'][0]['type'] == 'disneyPlusOriginal':
             isOriginal = True
         else:
-            None
-        print(int(self._created_at.split('-')[0].strip()))
+            isOriginal = None
         if year:
             if year < 1900 or year > int(self._created_at.split('-')[0].strip()):
                 year = None
@@ -102,7 +110,7 @@ class DisneyPlus():
             "Seasons":       seasons_payload,                #Unicamente para series
             "Crew":          crew,
             "Title":         title,       #Obligatorio      
-            "CleanTitle":    title, #_replace(title),     #Obligatorio      
+            "CleanTitle":    _replace(title),     #Obligatorio      
             "OriginalTitle": None,                          
             "Type":          'serie',               #Obligatorio      
             "Year":          year,                #Important!     
@@ -131,7 +139,7 @@ class DisneyPlus():
         }
         self.payloads.append(payload_serie) 
 
-    def create_payload_movie(self,content):
+    def create_payload_movie(self,content,title,main_url):
         """
         Method to create payloads for movies
         Arg: All parameters to build dictionary
@@ -139,15 +147,47 @@ class DisneyPlus():
 
         """
 
+        _id             = content['contentId']
+        try:
+            deeplink        = main_url+'/series/'+content['text']['title']['slug']['program']['default']['content']+'/'+content['encodedSeriesId']
+        except:
+            deeplink        = main_url+'/series/'+content['text']['title']['slug']['program']['default']['content']+'/'+content['family']['encodedFamilyId']
+        year            = content['releases'][0]['releaseYear']
+        synopsis        = None
+        image           = content['image']['hero_tile']['3.91']['program']['default']['url']
+        rating          = content['ratings'][0]['value']
+        provider        = None
+        genres          = None
+        cast            = None
+        directors       = None
+        availability    = None
+        download        = None
+        isAdult         = None
+        isBranded       = None
+        country_list    = None
+        package_movie   = [{'Type': 'subscription-vod'}]
+
+        print('----------------------------------')
+        print('ADDED ',title,' - ',_id, ' - ',deeplink)
+
+        if content['tags'][0]['type'] == 'disneyPlusOriginal':
+            isOriginal = True
+        else:
+            isOriginal = None
+        
+        if year:
+            if year < 1900 or year > int(self._created_at.split('-')[0].strip()):
+                year = None
+
         payload_movie = {      
             "PlatformCode":  self._platform_code,    #Obligatorio      
             "Id":            _id,                    #Obligatorio
             "Title":         title,                  #Obligatorio      
             "CleanTitle":    _replace(title),        #Obligatorio      
             "OriginalTitle": None,                          
-            "Type":          _type,                  #Obligatorio      
+            "Type":          'movie',                  #Obligatorio      
             "Year":          year,                   #Important!     
-            "Duration":      duration,          
+            "Duration":      None,          
             "Deeplinks": {          
                 "Web":       deeplink,               #Obligatorio          
                 "Android":   None,          
@@ -171,11 +211,6 @@ class DisneyPlus():
             "CreatedAt":     self._created_at        #Obligatorio
         }
         self.payloads.append(payload_movie)
-
-
-    def scraping(self):
-        print('######## STARTING SCRAPING #######')
-        self.scrap()
 
         
 
