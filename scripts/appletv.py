@@ -9,6 +9,9 @@ import requests
 import json
 from datetime import datetime
 from bs4 import BeautifulSoup
+from selenium import webdriver
+import re
+import pprint
 
 
 class AppleTV():
@@ -20,10 +23,16 @@ class AppleTV():
         self.insert_many_to_db = db_conection.insertMany
         self.insert_one_to_db = db_conection.insert
         self.scraped = []
+        self.trending_movies = []
+        self.trending_shows = []
+        self.top_ten_movies = []
+        self.top_ten_shows = []
+        self.browser = webdriver.Firefox()
         #self.prescraping_payloads = []
         
 
-    def scraping(self):    
+    def scraping(self):
+        self.get_trendings()    
         payloads = list()
         start_url = 'https://tv.apple.com/api/uts/v2/browse/webLanding?l=en&utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'
         response = self.getUrl(url=start_url)
@@ -43,7 +52,6 @@ class AppleTV():
         
         id_list=list(set(id_list))
         
-        #self.get_top_10_contents(id_list)
 
         for content in id_list:
             url = 'https://tv.apple.com/api/uts/v2/view/show/{}?utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'.format(content)
@@ -156,12 +164,23 @@ class AppleTV():
                 payloads.append(payload)
 
             if len(payloads) > 99:
+                self.check_top_10(payloads)
                 self.insert_many_to_db(payloads)
                 payloads.clear()
         if payloads:
             self.insert_many_to_db(payloads)
         self.currentSession.close()
-        print('Finished')
+        
+        print(f'\n\n')
+        if self.top_ten_movies:
+            for movie in self.top_ten_movies:
+                pprint.pprint(movie)
+        if self.top_ten_shows:
+            for show in self.top_ten_shows:
+                pprint.pprint(show)       
+
+        print(f'\nFinished\n') 
+
         #Upload(self._platform_code, self._created_at, testing=testing)
         
     def getUrl(self, url):
@@ -301,18 +320,147 @@ class AppleTV():
         
         return cast or None, directors or None, crew or None
 
-    def get_top_10_contents(self,list_ids):
-        for content in list_ids:
-            url = 'https://tv.apple.com/api/uts/v2/view/show/{}?utsk=6e3013c6d6fae3c2%3A%3A%3A%3A%3A%3A235656c069bb0efb&caller=web&sf=143441&v=36&pfm=web&locale=en-US'.format(content)
-            response = self.getUrl(url=url)
-            try:
-                data = response.json()
-                content_id = data['data']['channels'][0]['appAdamIds'][0]
-                title_slug = data['data']['content']['title']
-            except: continue
-            category = data['data']['content']['type']
-            country_code = 'ar'
-            api_2 = 'https://itunes.apple.com/{}/{}/{}/id{}?isWebExpV2=true&dataOnly=true'.format(country_code,category,title_slug,content_id)
-            response_2 = self.getUrl(url=api_2)
-            data_2 = response_2.json()
-            print(str(data_2))
+    def get_trendings(self):
+        trending_movies = []
+        trending_shows = []
+        flix_platforms = ['netflix','hbo','disney','amazon','itunes','google']
+        search_movies = {
+        'rotten_tomatoes':'https://editorial.rottentomatoes.com/guide/popular-movies/',
+        'imdb' : 'https://www.imdb.com/chart/moviemeter/?sort=rk,asc&mode=simple&page=1',
+        'the_numbers' : 'https://www.the-numbers.com/movies/trending',
+        'flix_patrol' : 'https://flixpatrol.com/'
+        }
+        search_shows = {
+            'rotten_tomatoes': 'https://www.rottentomatoes.com/browse/tv-list-2',
+            'imdb': 'https://www.imdb.com/chart/tvmeter/?ref_=nv_tvv_mptv'
+        }
+
+        urls = search_movies.values()
+        for url in urls:
+            self.browser.get(url)
+            page_source = self.browser.page_source
+            if 'rottentomatoes' in url:
+                content_soup = BeautifulSoup(page_source, 'lxml')
+                data_container = content_soup.find_all('div', {'class':'row countdown-item'})
+                top_ten = data_container[:10]
+                for content in top_ten:
+                    data_info = content.find('h2')
+                    title = data_info.find('a').text
+                    year = data_info.find('span', {'class':'subtle start-year'}).text
+                    year = year[year.find("(")+1:year.find(")")]
+                    trending_movies.append({title:year})
+            elif 'imdb' in url:
+                content_soup = BeautifulSoup(page_source, 'lxml')
+                data_container = content_soup.find('tbody',{'class':'lister-list'})
+                all_trs = data_container.find_all('tr')
+                top_ten = all_trs[:10]
+                for content in top_ten:
+                    data_info = content.find('td',{'class':'titleColumn'})
+                    title = data_info.find('a').text
+                    year = data_info.find('span',{'class':'secondaryInfo'}).text
+                    year = year[year.find("(")+1:year.find(")")]
+                    trending_movies.append({title:year})
+            elif 'numbers' in url:
+                content_soup = BeautifulSoup(page_source, 'lxml')
+                data_container = content_soup.find('div',{'id':'main'})
+                all_divs = data_container.find_all('div', attrs = {'style':'border: 1px solid black; border-radius: 8px; padding: 6px; margin: 8px; box-shadow: 4px 4px 4px #888;'})
+                top_ten = all_divs[:10]
+                for content in top_ten:
+                    data_info = content.find('table', attrs={'style':'width:410px;'})
+                    all_trs = data_info.find('tbody').find_all('tr')
+                    title = all_trs[0].find('span', attrs={'style':'font-size:200%;'}).text
+                    year = all_trs[4].find('td').text
+                    year = re.search(r"(\d{4})", year).group(1)
+                    trending_movies.append({title:year})
+            else:
+                for plat in flix_platforms:
+                    path_url = 'top10/{}'.format(plat)
+                    url_ = url+(path_url)
+                    self.browser.get(url_)
+                    page_source = self.browser.page_source
+                    content_soup = BeautifulSoup(page_source, 'lxml')
+                    data_movies = content_soup.find('div',{'id':f'{plat}-1'}) 
+                    data_container = data_movies.find('table',{'class':'card-table'})
+                    all_trs = data_container.find_all('tr')
+                    for tr in all_trs:
+                        title_container = tr.find_all('td')
+                        title_slug = title_container[1].find('a')['href']
+                        content_url = 'https://flixpatrol.com{}'.format(title_slug)
+                        self.browser.get(content_url)
+                        page_source = self.browser.page_source
+                        content_soup = BeautifulSoup(page_source, 'lxml')
+                        data_container = content_soup.find('div',{'class':'md:flex items-baseline justify-between'})
+                        title = data_container.find('h1',{'class':'mb-3'}).text
+                        data_container = content_soup.find('div',{'class':'flex flex-wrap text-sm leading-6 text-gray-500'})
+                        year_container = data_container.find_all('span')
+                        year = year_container[4].text
+                        year = year.split('/')[2]
+                        trending_movies.append({title:year})
+                    self.browser.get(url_)
+                    page_source = self.browser.page_source
+                    content_soup = BeautifulSoup(page_source, 'lxml')
+                    data_series = content_soup.find('div',{'id':f'{plat}-2'})
+                    data_container = data_series.find('table',{'class':'card-table'})
+                    all_trs = data_container.find_all('tr')
+                    for tr in all_trs:
+                        title_container = tr.find_all('td')
+                        title_slug = title_container[1].find('a')['href']
+                        content_url = 'https://flixpatrol.com{}'.format(title_slug)
+                        self.browser.get(content_url)
+                        page_source = self.browser.page_source
+                        content_soup = BeautifulSoup(page_source, 'lxml')
+                        data_container = content_soup.find('div',{'class':'md:flex items-baseline justify-between'})
+                        title = data_container.find('h1',{'class':'mb-3'}).text
+                        trending_shows.append({'title':title})
+        urls = search_shows.values()
+        for url in urls:
+            self.browser.get(url)
+            page_source = self.browser.page_source
+            content_soup = BeautifulSoup(page_source, 'lxml')
+            if 'rottentomatoes' in url:
+                data_container = content_soup.find('div',{'class':'mb-movies'})
+                all_divs = data_container.find_all('div',{'class':'mb-movie'})
+                for div in all_divs:
+                    title = div.text
+                    title = title.split(':')[0]
+                    trending_shows.append({'title':title})
+            else:
+                data_container = content_soup.find('tbody',{'class':'lister-list'})
+                all_trs = data_container.find_all('tr')
+                top_ten = all_trs[:10]
+                for content in top_ten:
+                    data_info = content.find('td',{'class':'titleColumn'})
+                    title = data_info.find('a').text
+                    trending_shows.append({'title':title})
+
+        self.trending_movies = self.set_dct(trending_movies)
+        self.trending_shows = self.set_dct(trending_shows)
+
+    def set_dct(self,lst):
+        seen = set()
+        new_l = []
+        for d in lst:
+            t = tuple(d.items())
+            if t not in seen:
+                seen.add(t)
+                new_l.append(d)
+        return new_l
+
+    def check_top_10(self,lst,type):
+        if type == 'movie':
+            movies = [{payload['Title']:payload['Year']} for payload in lst]
+            for dct in movies:
+                for k,v in dct.items():
+                    for dct1 in self.trending_movies:
+                        for x,y in dct1.items():
+                            if k==x and v==y:
+                                self.top_ten_movies.append(dct)
+        else:
+            shows = [{'title': payload['Title']} for payload in lst]
+            for dct in shows:
+                for k,v in dct.items():
+                    for dct1 in self.trending_shows:
+                        for x,y in dct1.items():
+                            if v==y:
+                                self.top_ten_shows.append(dct)
+
