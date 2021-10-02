@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+from handle.mongo import mongo
 from handle.replace                 import _replace
 from datetime import datetime
 import json
@@ -23,7 +24,8 @@ class DisneyPlus():
         self.email                = 'support@bb.vision'
         self.password             = 'KLM2012a'
         self.main_url             = 'https://www.disneyplus.com'
-        self.payloads             = []
+        self.payloads_series             = []
+        self.payloads_movies             = []
         self._config            = config()['ott_sites'][ott_site_uid]
         self.mongo = mongo()   
         self.titanTopMovies = config()['mongo']['collections']['topMovies']
@@ -64,6 +66,9 @@ class DisneyPlus():
                 if data['type'] == 'movie':
                     self.create_payload_movie(content,title,self.main_url)
                 counter = counter + 1
+        
+        self.mongo.insertMany(self.titanTopSeries,self.payloads_series)
+        self.mongo.insertMany(self.titanTopMovies,self.payloads_movies)
 
     def create_payload_serie(self,content,title,main_url):
         """
@@ -137,7 +142,7 @@ class DisneyPlus():
             "Timestamp":     datetime.now().isoformat(), #Obligatorio      
             "CreatedAt":     self._created_at     #Obligatorio
         }
-        self.payloads.append(payload_serie) 
+        self.payloads_series.append(payload_serie)
 
     def create_payload_movie(self,content,title,main_url):
         """
@@ -210,7 +215,7 @@ class DisneyPlus():
             "Timestamp":     datetime.now().isoformat(), #Obligatorio      
             "CreatedAt":     self._created_at        #Obligatorio
         }
-        self.payloads.append(payload_movie)
+        self.payloads_movies.append(payload_movie)
 
         
 
