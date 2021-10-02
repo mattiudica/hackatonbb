@@ -7,12 +7,14 @@ import re
 import json
 import pyotp
 from common import config
-
+from handle.mongo import mongo
+from updates.upload import Upload
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from datetime import datetime
 from handle.replace import _replace
+from handle.datamanager import Datamanager
 from selenium.webdriver.firefox.options import Options
 from handle.payload     import Payload
 
@@ -44,11 +46,15 @@ class AmazonPrimeVideo():
     def __init__(self, ott_site_uid, ott_site_country, operation):
         self._config            = config()['ott_sites'][ott_site_uid]
         self.country            = ott_site_country
+        self.mongo = mongo()
         self._start_url         = self._config['start_url']
         self._url_api           = self._config['url_api']
         self._deeplink          = self._config['deeplink']
         self._deeplink2         = self._config['deeplink2']
         self._platform_code     = self._config['countries_data'][ott_site_country]['PlatformCode']
+        self.titanTopOverall = config()['mongo']['collections']['scraping']
+        self.titanTopMovies = config()['mongo']['collections']['scraping']
+        self.titanTopSeries = config()['mongo']['collections']['scraping']
         self._created_at        = time.strftime('%Y-%m-%d')
         self.url_original       = self._config['url_original']
         
@@ -108,7 +114,7 @@ class AmazonPrimeVideo():
         if self.account:
             option = Options()
             option.add_argument('--headless')
-            browser = webdriver.Chrome()
+            browser = webdriver.Firefox()
 
             check_location = self.validate_location(browser)
             if not check_location:
@@ -231,8 +237,11 @@ class AmazonPrimeVideo():
         ten_urls = []
         time.sleep(3)
         browser.execute_script("window.scroll(0, 1600)")
-        time.sleep(10)
-        browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/button').click()
+        time.sleep(15)
+        try:
+            browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/button').click()
+        except:
+            raise Exception("No se encuentra disponible el top 10 en este pais")
         time.sleep(3)
         section = browser.find_element_by_xpath('//*[@id="aiv-cl-main-middle"]/div/div[3]/div/div[7]/div/div/div[3]/div/div/div/ul')    
         li  = section.find_elements_by_tag_name('li')
@@ -270,8 +279,8 @@ class AmazonPrimeVideo():
                 time.sleep(requestsTimeout)
                 continue
             break
-
     def scraping(self, browser):
+
         urls = {
             "url_top_ten_overall" : self.get_urls(browser),
             "url_top_ten_series"  : self.get_series_url(browser),
@@ -297,8 +306,11 @@ class AmazonPrimeVideo():
         browser.close()
         time.sleep(5)
         browser.quit()
-        time.sleep(5)
-
+        time.sleep(5)     
+        self.mongo.insertMany(self.titanTopOverall, self.payload_top_overall) 
+        self.mongo.insertMany(self.titanTopMovies, self.payload_top_movies) 
+        self.mongo.insertMany(self.titanTopSeries, self.payload_top_series)  
+        Upload(self._platform_code, self._created_at, True)
 
     def get_type(self, browser):
         div = browser.execute_script('return document.querySelector(".dv-node-dp-seasons")')

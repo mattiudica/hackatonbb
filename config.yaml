@@ -1089,23 +1089,37 @@ ott_sites:
         account: account_JO
         cookie: true
         region: "na"
-  HBO:
-    countries:
-      US: 'us.hbomax'
-      AR: 'ar.hbomax'
-      PY: 'py.hbomax'
-      PE: 'pe.hbomax'
-      BR: 'br.hbomax'
-      EC: 'ec.hbomax'
-      MX: 'mx.hbomax'
-      CL: 'cl.hbomax'
-      UY: 'uy.hbomax'
-      PA: 'pa.hbomax'
-      CR: 'cr.hbomax'
-      CO: 'co.hbomax'
-      VE: 've.hbomax'
-      GT: 'gt.hbomax'
-
+    ####################
+    # URLS Principales.#
+    ####################
+    start_url: 'https://www.primevideo.com/auth-redirect/ref=atv_nb_sign_in?signin=1&returnUrl=%2Fref%3Datv_unknown'
+    deeplink: 'https://www.primevideo.com{href}' # -> OLD DEEPLINK
+    deeplink2: 'https://app.primevideo.com/detail?gti={href}' # -> NEW DEEPLINK
+    url_api: 'https://www.primevideo.com/region/{region}/gp/video/api/search?queryToken={token}&queryPageType=browse&ref_=atv_sr_infinite_scroll&pageId=default&startIndex={itemsStart}&totalItems=15&refMarker=atv_sr_infinite_scroll&ie=UTF8'
+    ###########################################################
+    # URLS del catálogo de series, movies, channels y stores. #
+    ###########################################################
+    urlsNav:
+      movie   : https://www.primevideo.com/storefront/movie/ref=atv_nb_sf_mv
+      serie   : https://www.primevideo.com/storefront/tv/ref=atv_nb_sf_tv
+    url_store: https://www.primevideo.com/storefront/ref=nav_shopall_aiv_vid?merchId=RentBuy&ie=UTF8
+    url_channel : https://www.primevideo.com/storefront/channels/ref=atv_nb_sf_ch
+    url_original: https://www.primevideo.com/hp/video/api/search?phrase=amazon original&queryToken=&pageId=&queryPageType=&ref_=atv_sr_infinite_scroll&startIndex={start_index}&isCrow=1&useNodePlayer=1&totalItems={total}&refMarker=atv_sr_infinite_scroll&isHover2019=1&shouldShowPrimeSigns=1&ie=UTF8
+    ###########
+    # Queries #
+    ###########
+    queries:
+      user_name: '//input[contains(@id,"ap_email")]'
+      user_pass: '//input[contains(@id,"ap_password")]'
+      code_2fa: '//input[contains(@id, "auth-mfa-otpcode")]'
+      btn_login: '//input[contains(@id,"signInSubmit")]'
+      btn_login2: '//input[contains(@id,"auth-signin-button")]'
+      btn_otp: '//input[contains(@id,"auth-send-code")]'
+      chk_otp: '//input[contains(@value,", TOTP")]'
+      html: 'html'
+      a_see_more: '//a[contains(@class,"see-more")]' # Aplico Regex
+      div_all_categories: '//div[contains(@class,"u-collection tst-collection")]' # Aplico Regex
+      a_categories: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[{last_categorie}]/div/div[2]/div/div/ul/li/div/a'
     ########################
     # Cuentas disponibles. #
     ########################
@@ -1323,38 +1337,21 @@ ott_sites:
       account_NA: #para NA - Namibia
         user_name: 'lucasmaximoff1154@outlook.com'
         user_pass: 'darwin1154'
-
-      
-    ####################
-    # URLS Principales.#
-    ####################
-    start_url: 'https://www.primevideo.com/auth-redirect/ref=atv_nb_sign_in?signin=1&returnUrl=%2Fref%3Datv_unknown'
-    deeplink: 'https://www.primevideo.com{href}' # -> OLD DEEPLINK
-    deeplink2: 'https://app.primevideo.com/detail?gti={href}' # -> NEW DEEPLINK
-    url_api: 'https://www.primevideo.com/region/{region}/gp/video/api/search?queryToken={token}&queryPageType=browse&ref_=atv_sr_infinite_scroll&pageId=default&startIndex={itemsStart}&totalItems=15&refMarker=atv_sr_infinite_scroll&ie=UTF8'
-    ###########################################################
-    # URLS del catálogo de series, movies, channels y stores. #
-    ###########################################################
-    urlsNav:
-      movie   : https://www.primevideo.com/storefront/movie/ref=atv_nb_sf_mv
-      serie   : https://www.primevideo.com/storefront/tv/ref=atv_nb_sf_tv
-    url_store: https://www.primevideo.com/storefront/ref=nav_shopall_aiv_vid?merchId=RentBuy&ie=UTF8
-    url_channel : https://www.primevideo.com/storefront/channels/ref=atv_nb_sf_ch
-    url_original: https://www.primevideo.com/hp/video/api/search?phrase=amazon original&queryToken=&pageId=&queryPageType=&ref_=atv_sr_infinite_scroll&startIndex={start_index}&isCrow=1&useNodePlayer=1&totalItems={total}&refMarker=atv_sr_infinite_scroll&isHover2019=1&shouldShowPrimeSigns=1&ie=UTF8
-    ###########
-    # Queries #
-    ###########
-    queries:
-      user_name: '//input[contains(@id,"ap_email")]'
-      user_pass: '//input[contains(@id,"ap_password")]'
-      code_2fa: '//input[contains(@id, "auth-mfa-otpcode")]'
-      btn_login: '//input[contains(@id,"signInSubmit")]'
-      btn_login2: '//input[contains(@id,"auth-signin-button")]'
-      btn_otp: '//input[contains(@id,"auth-send-code")]'
-      chk_otp: '//input[contains(@value,", TOTP")]'
-      html: 'html'
-      a_see_more: '//a[contains(@class,"see-more")]' # Aplico Regex
-      div_all_categories: '//div[contains(@class,"u-collection tst-collection")]' # Aplico Regex
-      a_categories: '/html/body/div[1]/div[4]/div/div/div[3]/div/div[{last_categorie}]/div/div[2]/div/div/ul/li/div/a'
+  HBO:
+    countries:
+      US: 'us.hbomax'
+      AR: 'ar.hbomax'
+      PY: 'py.hbomax'
+      PE: 'pe.hbomax'
+      BR: 'br.hbomax'
+      EC: 'ec.hbomax'
+      MX: 'mx.hbomax'
+      CL: 'cl.hbomax'
+      UY: 'uy.hbomax'
+      PA: 'pa.hbomax'
+      CR: 'cr.hbomax'
+      CO: 'co.hbomax'
+      VE: 've.hbomax'
+      GT: 'gt.hbomax'
 
     

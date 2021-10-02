@@ -4,8 +4,8 @@ import requests
 import re
 from common import config
 from datetime import datetime
-#from handle.mongo import mongo
-# from updates.upload import Upload
+from handle.mongo import mongo
+from updates.upload import Upload
 from handle.datamanager import Datamanager
 from handle.replace import _replace
 class HBO():

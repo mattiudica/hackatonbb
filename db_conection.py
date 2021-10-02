@@ -5,7 +5,7 @@ MONGO_URI = 'mongodb://localhost'
 
 client = MongoClient(MONGO_URI)
 
-db = client['hackaton']
+db = client['hackathon']
 collection = db['platforms']
 
 def insert(data, collection=collection):
