@@ -16,8 +16,7 @@ from handle.mongo                                   import mongo
 from handle.replace                                 import _replace
 from handle.datamanager                             import RequestsUtils
 from selenium                                       import webdriver
-class Login():
-    
+class Netflix():
     def __init__(self, ott_site_uid, ott_site_country, type):
         
         self._config                    = config()['ott_sites'][ott_site_uid]
@@ -32,6 +31,9 @@ class Login():
         self.currentSession = self.sesion = requests.session()
         self.req_utils = RequestsUtils()
         self.browser = webdriver.Firefox() 
+        self.overall = False
+        self.series = False
+        self.movies = False
         self.payloads = []
         self.lista_ids = []
        
@@ -49,8 +51,6 @@ class Login():
 
         elif type == 'testing':
             self._scraping(testing = True)
-
-
 
     def _scraping(self, testing):
         urls = ['https://www.netflix.com/login', 'https://www.netflix.com/browse/genre/83', 'https://www.netflix.com/browse/genre/34399']
@@ -98,11 +98,14 @@ class Login():
                             payloads = self.get_payloads(deeplink, id_, itemId.div.text, top_position)
             
             if self.overall == True:
-                self.mongo.insertMany(self.titanTopOverall, payloads)
+                self.mongo.insertMany(self.titanTopOverall, self.payloads)
+                self.payloads.clear()
             if self.movies == True:
-                self.mongo.insertMany(self.titanTopMovies, payloads) 
+                self.mongo.insertMany(self.titanTopMovies, self.payloads) 
+                self.payloads.clear()
             if self.series == True:
-                self.mongo.insertMany(self.titanTopSeries, payloads)                    
+                self.mongo.insertMany(self.titanTopSeries, self.payloads)                    
+                self.payloads.clear()
             
     def get_payloads(self, deeplink, id_, titulo, top_position):
         self.browser.get(deeplink)

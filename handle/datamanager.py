@@ -7,7 +7,7 @@ import hashlib
 import platform
 import threading
 from requests.adapters      import HTTPAdapter
-#from requests.packages.urllib3.util.retry import Retry
+from requests.packages.urllib3.util.retry import Retry
 from pprint                 import pformat, pprint
 from concurrent.futures     import ThreadPoolExecutor, as_completed
 from pyvirtualdisplay       import Display

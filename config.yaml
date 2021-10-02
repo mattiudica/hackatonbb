@@ -1357,5 +1357,6 @@ ott_sites:
       CO: 'co.hbomax'
       VE: 've.hbomax'
       GT: 'gt.hbomax'
-
-    
+  Netflix:
+    countries:
+      AR: 'ar.netflix'
