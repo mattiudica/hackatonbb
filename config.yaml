@@ -451,6 +451,10 @@ mongo:
     guia: titanGuia
     prescraping: titanPreScraping
     scraping: titanScraping
+    topOverall: topOverall
+    topMovies: topMovies
+    topSeries: topSeries
+    topKids: topKids
     gatotv: titanScrapingGatoTV
     episode: titanScrapingEpisodes
     bash: titanScrapingBash

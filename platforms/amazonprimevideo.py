@@ -8,7 +8,7 @@ import json
 import pyotp
 from common import config
 from handle.mongo import mongo
-from updates.upload import Upload
+#from updates.upload import Upload
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from pyvirtualdisplay import Display
@@ -52,9 +52,9 @@ class AmazonPrimeVideo():
         self._deeplink          = self._config['deeplink']
         self._deeplink2         = self._config['deeplink2']
         self._platform_code     = self._config['countries_data'][ott_site_country]['PlatformCode']
-        self.titanTopOverall = config()['mongo']['collections']['scraping']
-        self.titanTopMovies = config()['mongo']['collections']['scraping']
-        self.titanTopSeries = config()['mongo']['collections']['scraping']
+        self.titanTopOverall = config()['mongo']['collections']['topOverall']
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
         self._created_at        = time.strftime('%Y-%m-%d')
         self.url_original       = self._config['url_original']
         
@@ -299,10 +299,6 @@ class AmazonPrimeVideo():
 
         # Corroborar que cierre bien el browser.
 
-        print(f' DICCIONARIO TOP 10 MOVIES  {self.payload_top_movies}')
-        print(f' DICCIONARIO TOP 10 SERIES  {self.payload_top_series}')
-        print(f' DICCIONARIO TOP 10 OVERALL {self.payload_top_overall}')
-
         browser.close()
         time.sleep(5)
         browser.quit()
@@ -310,7 +306,6 @@ class AmazonPrimeVideo():
         self.mongo.insertMany(self.titanTopOverall, self.payload_top_overall) 
         self.mongo.insertMany(self.titanTopMovies, self.payload_top_movies) 
         self.mongo.insertMany(self.titanTopSeries, self.payload_top_series)  
-        Upload(self._platform_code, self._created_at, True)
 
     def get_type(self, browser):
         div = browser.execute_script('return document.querySelector(".dv-node-dp-seasons")')

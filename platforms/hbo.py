@@ -5,19 +5,18 @@ import re
 from common import config
 from datetime import datetime
 from handle.mongo import mongo
-from updates.upload import Upload
 from handle.datamanager import Datamanager
 from handle.replace import _replace
 class HBO():
     def __init__(self, ott_site_uid, ott_site_country, type):
         self._config = config()['ott_sites'][ott_site_uid]
         self._created_at = time.strftime("%Y-%m-%d")
-        #self.mongo = mongo()
+        self.mongo = mongo()
         self.start_url = 'https://play.hbomax.com/page/'
         self._platform_code = self._config['countries'][ott_site_country]
-        #self.titanScraping = config()['mongo']['collections']['scraping']
-        #self.titanScrapingEpisodios = config(
-        #)['mongo']['collections']['episode']
+        self.titanTopKids = config()['mongo']['collections']['topKids']
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
         self.sesion = requests.session()
 
         if type == 'scraping':
@@ -89,7 +88,9 @@ class HBO():
             "x-hbo-brownie": "sessionContext=epe1EU8f2tIimQdZ7Zg7YQ%3D%3D.rp92%2FYqravT%2BuRuB8nk%2BTwC3PDv%2FBg%2B0xnm4dj7D24ilTMYLPSVNt5B8j9UuBj%2ByQM5g%2FQmnJBttnrrccFv9Kbd6mdxssL9qSSPJFXhewhhhMsm9L6u15pR9l5DQayvi3NFbvGVZHTGu0y5QL5bg2%2FYZaXxsCTHPiVzDjSYX6uliK5cjqE%2B6RQgKTtfXsAIpnzn0ZWlfzp55JnA6uSSqPN9Z3eH%2FnW6lOj0DNG6bigxZoXNgPeeBlKFVKTn5gqLFS1DCdggRiwVI5aSoLi82pzcyrE%2FH5EfJ8kX5dYWBHbJiYUcdsNX4rkizh4hS3g%2FWiPH0lmY%2FDdewRQquK%2FpJguCVzm0%2BGr44qkk5RU6nJqpCxyegQyS3uWdTSGVhYl%2F072VRWsMHX1KTiC2U%2B%2FoJcN%2BLfXLtOPX660gh1AkeCZf%2F%2BYPNJDm1oIVJ1wFWhyTVfDoP2R2MTqOPxeuhgbwReyDcil4KK1VPHrB7N77xVeTMsFai0a7%2F0U%2Bf2Wg3R8I7V%2BccUBpPSG7CEO%2BAaW4CbWQkBQK%2FUQxAXYU1ntBvZnlvU5wTgB9Txf64xLqs1Q8H9gxGIdK1kFBB%2FK0H7adj4FvzPQHcOIwYDO2JNu%2FFqJXEvT1Ja0BrnIkVK9VlAP9dE5tEiSUfpl2inYE%2FfP0qpV2hqaEU5M67nG8IJzJn%2BNQ%3D"
         }
         list_top = []
-        #Se ingresa con features para obtener los top 10 de la plataforma
+        #Se ingresa con features para obtener los top 10 de la plataforma        self.titanTopOverall = config()['mongo']['collections']['topOverall']
+        self.titanTopMovies = config()['mongo']['collections']['topMovies']
+        self.titanTopSeries = config()['mongo']['collections']['topSeries']
         features = "urn:hbo:tab:k1YSGs04uqezgzZJtl3G9"
         payload = "[{\"id\":\""+features+"\"}]"
 
@@ -113,9 +114,16 @@ class HBO():
                     payload = payload.replace(':type:series', '').replace('tile', 'series')
                 data_final = Datamanager._getJSON(self, url, headers=headers, data=payload, usePOST=True)
                 list_payloads.append(self.get_payload(data_final[0],content_type))
-            list_top.append({'Name': top_title, 'List Payloads': list_payloads})
-        
+            if re.search('movie',top_title.lower()):
+                self.payload_top_movies(list_payloads)
+            elif re.search('serie',top_title.lower()):
+                self.payload_top_series(list_payloads)
+            else:
+                self.get_payload_top_kids(list_payloads)
 
+        self.mongo.insertMany(self.titanTopKids, self.payload_top_kids) 
+        self.mongo.insertMany(self.titanTopMovies, self.payload_top_movies) 
+        self.mongo.insertMany(self.titanTopSeries, self.payload_top_series)  
     @staticmethod
     def get_id(content): return str(content['id'])
 

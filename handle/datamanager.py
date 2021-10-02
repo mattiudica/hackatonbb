@@ -34,7 +34,7 @@ class Datamanager():
     '''
     def __init__(self):
         self.mongo                  = mongo()
-        self.titanTopOverall = config()['mongo']['collections']['scraping']
+        self.titanTopOverall = config()['mongo']['collections']['topOverall']
         self.titanTopMovies = config()['mongo']['collections']['scraping']
         self.titanTopSeries = config()['mongo']['collections']['scraping']
         self.titanTopKids = config()['mongo']['collections']['scraping']
