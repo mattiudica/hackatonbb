@@ -1,2 +1,11 @@
 hackaton
 env
+
+#bynaries
+__pycache__
+
+#vscode
+.vscode
+
+#logs
+.log
