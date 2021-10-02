@@ -536,3 +536,30 @@ JavaScript warning: https://z.moatads.com/nbcuyieldheader7581548001/yi.js, line 
 JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
 JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
 JavaScript error: , line 0: uncaught exception: undefined
+1633152220901	Marionette	INFO	Stopped listening on port 5686
+JavaScript error: resource:///modules/Interactions.jsm, line 230: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIUserIdleService.removeIdleObserver]
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1633152276518	geckodriver	INFO	Listening on 127.0.0.1:22611
+1633152277519	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileevgTT7"
+1633152277744	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\Administrador\\AppData\\Local\\Temp\\rust_mozprofileevgTT7\\search.json.mozlz4", (void 0)))
+1633152279033	Marionette	INFO	Listening on port 22618
+1633152279059	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://player.theplatform.com/pdk/dCK2IC/tpPdkController.js?pdk=5.7.5&logLevel=debug, line 227: TypeError: this.iframe.contentWindow is undefined
+JavaScript error: https://editorial.rottentomatoes.com/wp-content/themes/RottenTomatoes/js/rtmain.js, line 336: TypeError: document.getElementById(...) is null
+JavaScript error: https://editorial.rottentomatoes.com/guide/popular-movies/ line 242 > injectedScript, line 1: TypeError: a is null
+JavaScript warning: https://editorial.rottentomatoes.com/RGz4jrYdqg6IvpefWlrJxWpjB18/r9aShGwLSE/C0QIeWs8Bw/Yj0/WDWELaioB, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript warning: https://z.moatads.com/nbcuyieldheader7581548001/yi.js, line 195: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript error: , line 0: uncaught exception: undefined
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript warning: https://staticv2-4.rottentomatoes.com/static/dist/common-pure-react.js, line 22369: unreachable code after return statement
+JavaScript warning: https://staticv2-4.rottentomatoes.com/static/dist/common-pure-react.js, line 22369: unreachable code after return statement
+JavaScript warning: https://www.rottentomatoes.com/rt-common.js?seed=AICQXz98AQAA-50ett1m0xDi-DnvfeD_wiBT_GWk_P7E_W7crmXWm83d18SU&HgdtNmCjYr--z=q, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript warning: https://z.moatads.com/nbcuyieldheader7581548001/yi.js, line 195: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript warning: https://www.rottentomatoes.com/kcqajCfRY/cq_OSA/3u/gdT7udOb4s/1i3pw2prJ1Si/OXl6GHI5AQ/K1BfL/x8IMT0B, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript warning: https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.3/backbone.marionette.min.js, line 22: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.

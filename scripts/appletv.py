@@ -28,7 +28,6 @@ class AppleTV():
         self.top_ten_movies = []
         self.top_ten_shows = []
         self.browser = webdriver.Firefox()
-        #self.prescraping_payloads = []
         
 
     def scraping(self):
@@ -65,11 +64,6 @@ class AppleTV():
             content_deeplink = data['data']['content']['url']
             content_deeplink_data = self.currentSession.get(content_deeplink).text
             content_soup = BeautifulSoup(content_deeplink_data, 'lxml')
-            
-            ### PRESCRAPING ###
-            #prescraping_payload = self.get_prescraping_payload(data, content_deeplink_data)
-            #self.prescraping_payloads.append(prescraping_payload)
-            ### PRESCRAPING ###
             
             print(data['data']['content']['type'])
             if data['data']['content']['type'] == 'Movie':
