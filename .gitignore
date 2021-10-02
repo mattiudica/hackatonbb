@@ -9,3 +9,10 @@ __pycache__
 
 #logs
 .log
+
+#frontend
+frontend
+__pycache__/common.cpython-39.pyc
+__pycache__/common.cpython-39.pyc
+__pycache__/common.cpython-39.pyc
+handle/__pycache__/replace.cpython-39.pyc
